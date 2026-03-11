@@ -18,16 +18,14 @@
         "value": 6399
       }
     ],
-    "subhead": "gpuFLOPBench is a multi-GPU benchmark atlas for comparing source binaries, kernel behavior, and instruction-mix structure across the profiled corpus."
+    "subhead": "gpuFLOPBench is a multi-GPU benchmark atlas for floating-point rooflines, source-level coverage, and exact kernel exploration across the profiled corpus."
   },
   "inventory": {
     "totals": {
       "benchmarks_yaml": 505,
       "profiled_benchmarks": 369,
-      "feature_benchmarks": 325,
       "profiled_sources": 623,
-      "feature_sources": 551,
-      "with_tests": 163
+      "categorized_profiled_benchmarks": 349
     },
     "models_available": [
       {
@@ -49,193 +47,104 @@
     ],
     "categories_available": [
       {
+        "category": "Simulation",
+        "count": 96
+      },
+      {
+        "category": "Machine learning",
+        "count": 80
+      },
+      {
+        "category": "Math",
+        "count": 71
+      },
+      {
+        "category": "Computer vision and image processing",
+        "count": 50
+      },
+      {
+        "category": "Language and kernel features",
+        "count": 42
+      },
+      {
+        "category": "Data compression and reduction",
+        "count": 32
+      },
+      {
         "category": "algorithms",
-        "count": 455
+        "count": 31
       },
       {
-        "category": "bioinformatics",
-        "count": 22
+        "category": "Bioinformatics",
+        "count": 21
       },
       {
-        "category": "math",
-        "count": 14
+        "category": "Sorting",
+        "count": 11
       },
       {
-        "category": "ml",
+        "category": "Bandwidth",
+        "count": 10
+      },
+      {
+        "category": "Cryptography",
         "count": 9
       },
       {
-        "category": "cryptography",
-        "count": 4
+        "category": "Data encoding, decoding, or verification",
+        "count": 9
       },
       {
-        "category": "graph",
-        "count": 3
+        "category": "Search",
+        "count": 9
       },
       {
-        "category": "imaging",
-        "count": 3
+        "category": "Graph and Tree",
+        "count": 9
       },
       {
-        "category": "simulation",
+        "category": "Geoscience",
+        "count": 6
+      },
+      {
+        "category": "Random number generation",
+        "count": 6
+      },
+      {
+        "category": "Finance",
+        "count": 5
+      },
+      {
+        "category": "Signal processing",
+        "count": 5
+      },
+      {
+        "category": "Robotics",
         "count": 2
       },
       {
-        "category": "compression",
-        "count": 1
-      },
-      {
-        "category": "matrix",
-        "count": 1
-      },
-      {
-        "category": "automotive",
-        "count": 1
-      },
-      {
-        "category": "eda",
-        "count": 1
-      },
-      {
-        "category": "machinelearning",
-        "count": 1
-      },
-      {
-        "category": "neuralnetwork",
+        "category": "Automotive",
         "count": 1
       }
     ],
-    "coverage": {
-      "profiled_benchmark_ratio": 0.7307,
-      "feature_benchmark_ratio": 0.6436,
-      "feature_source_gap": 72,
-      "unmapped_profiled_benchmarks": [
-        "moe-align",
-        "moe-sum"
-      ]
-    }
+    "category_source": "HeCBench README.md"
   },
   "audit": {
-    "generated_at": "2026-03-11T00:10:56.429044+00:00",
-    "checks": [
-      {
-        "id": "hecbench-metadata",
-        "label": "HeCBench metadata base",
-        "status": "complete",
-        "detail": "505 benchmark entries parsed from benchmarks.yaml."
-      },
-      {
-        "id": "aggregated-performance",
-        "label": "Aggregated performance corpus",
-        "status": "complete",
-        "detail": "241.51M CSV available at cuda-profiling/collected-data/all-NCU-GPU-Data.csv."
-      },
-      {
-        "id": "feature-enriched-corpus",
-        "label": "IMIX-enriched feature corpus",
-        "status": "partial",
-        "detail": "551 feature-enriched sources available; 72 raw performance sources do not appear in the IMIX merge."
-      },
-      {
-        "id": "build-artifacts",
-        "label": "Local build artifacts",
-        "status": "partial",
-        "detail": "This checkout does not include build/bin outputs; runBuild.sh must be executed in the Docker/NVIDIA toolchain before artifact tests can pass."
-      },
-      {
-        "id": "agentic-tools",
-        "label": "Agentic analysis layer",
-        "status": "partial",
-        "detail": "4 helper modules still expose NotImplemented TODO stubs."
-      }
-    ],
-    "feature_gap_sources": [
-      "addBiasQKV-cuda",
-      "aligned-types-cuda",
-      "aligned-types-omp",
-      "amgmk-cuda",
-      "amgmk-omp",
-      "assert-cuda",
-      "assert-omp",
-      "asta-cuda",
-      "asta-omp",
-      "atomicReduction-cuda",
-      "atomicReduction-omp",
-      "babelstream-cuda",
-      "babelstream-omp",
-      "binomial-cuda",
-      "binomial-omp",
-      "bitpacking-cuda",
-      "bspline-vgh-cuda",
-      "bspline-vgh-omp",
-      "chemv-cuda",
-      "chemv-omp",
-      "clenergy-cuda",
-      "clenergy-omp",
-      "clock-cuda",
-      "ddbp-cuda",
-      "ddbp-omp",
-      "degrid-cuda",
-      "degrid-omp",
-      "dispatch-cuda",
-      "gpp-cuda",
-      "gpp-omp",
-      "graphExecution-cuda",
-      "grrt-cuda",
-      "grrt-omp",
-      "hexciton-cuda",
-      "hexciton-omp",
-      "hmm-cuda",
-      "ising-cuda",
-      "ising-omp",
-      "jacobi-cuda",
-      "jacobi-omp",
-      "keccaktreehash-cuda",
-      "keccaktreehash-omp",
-      "langford-cuda",
-      "langford-omp",
-      "laplace-cuda",
-      "laplace-omp",
-      "lci-cuda",
-      "lci-omp",
-      "ldpc-cuda",
-      "ldpc-omp",
-      "lid-driven-cavity-cuda",
-      "lid-driven-cavity-omp",
-      "merkle-cuda",
-      "miniWeather-cuda",
-      "miniWeather-omp",
-      "minimod-cuda",
-      "overlap-cuda",
-      "perlin-cuda",
-      "quantAQLM-cuda",
-      "segsort-cuda",
-      "sheath-cuda",
-      "sheath-omp",
-      "sph-cuda",
-      "sph-omp",
-      "ssim-cuda",
-      "streamOrderedAllocation-cuda",
-      "streamPriority-cuda",
-      "su3-cuda",
-      "su3-omp",
-      "tsne-cuda",
-      "winograd-cuda",
-      "winograd-omp"
-    ],
-    "agentic_stub_files": [
-      "gpuFLOPBench-agentic/langchain-tools/treesitter-tools/callsite.py",
-      "gpuFLOPBench-agentic/langchain-tools/treesitter-tools/identifiers.py",
-      "gpuFLOPBench-agentic/langchain-tools/treesitter-tools/includes.py",
-      "gpuFLOPBench-agentic/langchain-tools/treesitter-tools/serialization.py"
-    ]
+    "generated_at": "2026-03-11T22:04:48.951426+00:00",
+    "category_source": "HeCBench/README.md",
+    "categorized_benchmarks": 484
   },
   "device_summary": [
     {
       "device": "3080",
-      "label": "NVIDIA GeForce RTX 3080",
-      "family": "Ampere",
-      "compute_capability": "sm_86",
+      "label": "RTX 3080 (PCIe)",
+      "full_name": "NVIDIA GeForce RTX 3080",
+      "architecture": "Ampere (GA102)",
+      "compute_capability": "8.6",
+      "memory_bandwidth_gbps": 760,
+      "peak_fp16_tflops": 30.55,
+      "peak_fp32_tflops": 30.55,
+      "peak_fp64_tflops": 0.477,
       "rows": 1734,
       "benchmarks": 362,
       "sources": 607,
@@ -250,19 +159,21 @@
           "sources": 250
         }
       ],
-      "median_total_perf": 499405366101.24176,
-      "p95_total_perf": 5588606957724.628,
-      "median_total_ai": 0.0007873940595701913,
-      "median_xtime": 203672.0,
-      "median_ipc": 0.52,
-      "median_issue_to_exec": 1.0031430317233996,
-      "median_occupancy": 992.0
+      "median_performance_tflops": 0.18396682407241355,
+      "p95_performance_tflops": 4.051042751957532,
+      "median_arithmetic_intensity": 1.5766219484950112,
+      "median_xtime_ns": 203672.0
     },
     {
       "device": "A10",
-      "label": "NVIDIA A10",
-      "family": "Ampere",
-      "compute_capability": "sm_86",
+      "label": "A10 (PCIe)",
+      "full_name": "NVIDIA A10",
+      "architecture": "Ampere (GA102)",
+      "compute_capability": "8.6",
+      "memory_bandwidth_gbps": 600,
+      "peak_fp16_tflops": 15.62,
+      "peak_fp32_tflops": 15.62,
+      "peak_fp64_tflops": 0.244,
       "rows": 1585,
       "benchmarks": 360,
       "sources": 599,
@@ -277,19 +188,21 @@
           "sources": 246
         }
       ],
-      "median_total_perf": 339933500451.4318,
-      "p95_total_perf": 3629464274264.491,
-      "median_total_ai": 0.0008668794404668711,
-      "median_xtime": 316202.6666666667,
-      "median_ipc": 0.54,
-      "median_issue_to_exec": 1.003151507324654,
-      "median_occupancy": 992.0
+      "median_performance_tflops": 0.12213828765090762,
+      "p95_performance_tflops": 2.402387494425584,
+      "median_arithmetic_intensity": 1.1764247304482274,
+      "median_xtime_ns": 316202.6666666667
     },
     {
       "device": "A100",
-      "label": "NVIDIA A100-SXM4-40GB",
-      "family": "Ampere",
-      "compute_capability": "sm_80",
+      "label": "A100 (SXM4)",
+      "full_name": "NVIDIA A100-SXM4-40GB",
+      "architecture": "Ampere (GA100)",
+      "compute_capability": "8.0",
+      "memory_bandwidth_gbps": 1555,
+      "peak_fp16_tflops": 77.97,
+      "peak_fp32_tflops": 19.49,
+      "peak_fp64_tflops": 9.75,
       "rows": 1453,
       "benchmarks": 362,
       "sources": 610,
@@ -304,19 +217,21 @@
           "sources": 254
         }
       ],
-      "median_total_perf": 1119494142987.8247,
-      "p95_total_perf": 7438923815964.003,
-      "median_total_ai": 0.00078596047923398,
-      "median_xtime": 168096.0,
-      "median_ipc": 0.7233333333333333,
-      "median_issue_to_exec": 1.0032722420162623,
-      "median_occupancy": 1696.0
+      "median_performance_tflops": 0.25946404232317377,
+      "p95_performance_tflops": 4.718258444239244,
+      "median_arithmetic_intensity": 1.1573850762925546,
+      "median_xtime_ns": 168096.0
     },
     {
       "device": "H100",
-      "label": "NVIDIA H100 80GB HBM3",
-      "family": "Hopper",
-      "compute_capability": "sm_90",
+      "label": "H100 (SXM5)",
+      "full_name": "NVIDIA H100 80GB HBM3",
+      "architecture": "Hopper (GH100)",
+      "compute_capability": "9.0",
+      "memory_bandwidth_gbps": 3360,
+      "peak_fp16_tflops": 133.82,
+      "peak_fp32_tflops": 66.91,
+      "peak_fp64_tflops": 33.45,
       "rows": 1627,
       "benchmarks": 368,
       "sources": 619,
@@ -331,13 +246,10 @@
           "sources": 256
         }
       ],
-      "median_total_perf": 1715799244879.62,
-      "p95_total_perf": 13365391044847.367,
-      "median_total_ai": 0.00046752666890261804,
-      "median_xtime": 96469.33333333333,
-      "median_ipc": 0.8433333333333333,
-      "median_issue_to_exec": 1.0009566149157354,
-      "median_occupancy": 1288.0
+      "median_performance_tflops": 0.3526302767947422,
+      "p95_performance_tflops": 10.014605719243034,
+      "median_arithmetic_intensity": 1.1091281648072044,
+      "median_xtime_ns": 96469.33333333333
     }
   ],
   "model_matrix": [
@@ -345,253 +257,352 @@
       "model": "cuda",
       "available": 504,
       "profiled": 364,
-      "feature_enriched": 320,
-      "profiled_ratio": 0.7222,
-      "feature_ratio": 0.6349
+      "profiled_ratio": 0.7222
+    },
+    {
+      "model": "hip",
+      "available": 499,
+      "profiled": 0,
+      "profiled_ratio": 0.0
     },
     {
       "model": "omp",
       "available": 326,
       "profiled": 259,
-      "feature_enriched": 231,
-      "profiled_ratio": 0.7945,
-      "feature_ratio": 0.7086
+      "profiled_ratio": 0.7945
+    },
+    {
+      "model": "sycl",
+      "available": 485,
+      "profiled": 0,
+      "profiled_ratio": 0.0
     }
   ],
   "category_profiled": [
     {
+      "category": "Simulation",
+      "model_type": "cuda",
+      "profiled_sources": 80
+    },
+    {
+      "category": "Simulation",
+      "model_type": "omp",
+      "profiled_sources": 69
+    },
+    {
+      "category": "Machine learning",
+      "model_type": "cuda",
+      "profiled_sources": 62
+    },
+    {
+      "category": "Machine learning",
+      "model_type": "omp",
+      "profiled_sources": 41
+    },
+    {
+      "category": "Math",
+      "model_type": "cuda",
+      "profiled_sources": 40
+    },
+    {
+      "category": "Math",
+      "model_type": "omp",
+      "profiled_sources": 32
+    },
+    {
+      "category": "Computer vision and image processing",
+      "model_type": "cuda",
+      "profiled_sources": 36
+    },
+    {
+      "category": "Computer vision and image processing",
+      "model_type": "omp",
+      "profiled_sources": 28
+    },
+    {
+      "category": "Language and kernel features",
+      "model_type": "cuda",
+      "profiled_sources": 34
+    },
+    {
+      "category": "Language and kernel features",
+      "model_type": "omp",
+      "profiled_sources": 14
+    },
+    {
+      "category": "Data compression and reduction",
+      "model_type": "cuda",
+      "profiled_sources": 28
+    },
+    {
+      "category": "Data compression and reduction",
+      "model_type": "omp",
+      "profiled_sources": 13
+    },
+    {
       "category": "algorithms",
       "model_type": "cuda",
-      "profiled_sources": 340,
-      "category_slug": "algorithms"
+      "profiled_sources": 20
     },
     {
       "category": "algorithms",
       "model_type": "omp",
-      "profiled_sources": 246,
-      "category_slug": "algorithms"
+      "profiled_sources": 12
     },
     {
-      "category": "bioinformatics",
+      "category": "Sorting",
       "model_type": "cuda",
-      "profiled_sources": 8,
-      "category_slug": "bioinformatics"
+      "profiled_sources": 10
     },
     {
-      "category": "bioinformatics",
+      "category": "Sorting",
       "model_type": "omp",
-      "profiled_sources": 6,
-      "category_slug": "bioinformatics"
+      "profiled_sources": 7
     },
     {
-      "category": "cryptography",
+      "category": "Data encoding, decoding, or verification",
       "model_type": "cuda",
-      "profiled_sources": 2,
-      "category_slug": "cryptography"
+      "profiled_sources": 9
     },
     {
-      "category": "cryptography",
+      "category": "Data encoding, decoding, or verification",
       "model_type": "omp",
-      "profiled_sources": 2,
-      "category_slug": "cryptography"
+      "profiled_sources": 7
     },
     {
-      "category": "math",
+      "category": "Bioinformatics",
       "model_type": "cuda",
-      "profiled_sources": 4,
-      "category_slug": "math"
+      "profiled_sources": 7
     },
     {
-      "category": "math",
+      "category": "Bioinformatics",
       "model_type": "omp",
-      "profiled_sources": 1,
-      "category_slug": "math"
+      "profiled_sources": 5
     },
     {
-      "category": "ml",
+      "category": "Bandwidth",
       "model_type": "cuda",
-      "profiled_sources": 8,
-      "category_slug": "ml"
+      "profiled_sources": 6
     },
     {
-      "category": "ml",
+      "category": "Bandwidth",
       "model_type": "omp",
-      "profiled_sources": 4,
-      "category_slug": "ml"
+      "profiled_sources": 5
     },
     {
-      "category": "unmapped",
+      "category": "Cryptography",
       "model_type": "cuda",
-      "profiled_sources": 2,
-      "category_slug": "unmapped"
+      "profiled_sources": 6
+    },
+    {
+      "category": "Cryptography",
+      "model_type": "omp",
+      "profiled_sources": 4
+    },
+    {
+      "category": "Finance",
+      "model_type": "cuda",
+      "profiled_sources": 5
+    },
+    {
+      "category": "Finance",
+      "model_type": "omp",
+      "profiled_sources": 4
+    },
+    {
+      "category": "Signal processing",
+      "model_type": "cuda",
+      "profiled_sources": 5
+    },
+    {
+      "category": "Signal processing",
+      "model_type": "omp",
+      "profiled_sources": 4
+    },
+    {
+      "category": "Search",
+      "model_type": "cuda",
+      "profiled_sources": 4
+    },
+    {
+      "category": "Search",
+      "model_type": "omp",
+      "profiled_sources": 4
+    },
+    {
+      "category": "Graph and Tree",
+      "model_type": "cuda",
+      "profiled_sources": 4
+    },
+    {
+      "category": "Graph and Tree",
+      "model_type": "omp",
+      "profiled_sources": 3
+    },
+    {
+      "category": "Random number generation",
+      "model_type": "cuda",
+      "profiled_sources": 3
+    },
+    {
+      "category": "Random number generation",
+      "model_type": "omp",
+      "profiled_sources": 3
+    },
+    {
+      "category": "Geoscience",
+      "model_type": "cuda",
+      "profiled_sources": 3
+    },
+    {
+      "category": "Geoscience",
+      "model_type": "omp",
+      "profiled_sources": 2
+    },
+    {
+      "category": "Robotics",
+      "model_type": "cuda",
+      "profiled_sources": 2
+    },
+    {
+      "category": "Robotics",
+      "model_type": "omp",
+      "profiled_sources": 2
     }
   ],
   "top_lists": {
-    "peak_perf_sources": [
+    "performance_sources": [
       {
-        "source": "quant3MatMul-cuda",
-        "benchmark": "quant3MatMul",
-        "category": "algorithms",
+        "source": "maxFlops-cuda",
+        "benchmark": "maxFlops",
+        "category": "Language and kernel features",
         "model_type": "cuda",
         "device": "H100",
-        "kernel_count": 2,
-        "peak_total_perf": 27338787469946.367,
-        "median_total_ai": 0.002796005,
-        "median_xtime": 164240.0
+        "kernel_count": 3,
+        "peak_performance_tflops": 26.1341508316,
+        "median_arithmetic_intensity": 245819.8417771925,
+        "median_xtime_ns": 96321162.66666667
       },
       {
         "source": "maxFlops-omp",
         "benchmark": "maxFlops",
-        "category": "algorithms",
+        "category": "Language and kernel features",
         "model_type": "omp",
         "device": "H100",
         "kernel_count": 3,
-        "peak_total_perf": 26342738564443.066,
-        "median_total_ai": 23854.433988005,
-        "median_xtime": 96349002.66666667
-      },
-      {
-        "source": "maxFlops-cuda",
-        "benchmark": "maxFlops",
-        "category": "algorithms",
-        "model_type": "cuda",
-        "device": "H100",
-        "kernel_count": 3,
-        "peak_total_perf": 26243107933105.9,
-        "median_total_ai": 23963.4178882941,
-        "median_xtime": 96321162.66666667
-      },
-      {
-        "source": "epistasis-cuda",
-        "benchmark": "epistasis",
-        "category": "bioinformatics",
-        "model_type": "cuda",
-        "device": "H100",
-        "kernel_count": 1,
-        "peak_total_perf": 26211263376536.91,
-        "median_total_ai": 7.6204620541,
-        "median_xtime": 23789461.333333332
+        "peak_performance_tflops": 26.1247340092,
+        "median_arithmetic_intensity": 245583.175873696,
+        "median_xtime_ns": 96349002.66666667
       },
       {
         "source": "michalewicz-cuda",
         "benchmark": "michalewicz",
-        "category": "algorithms",
+        "category": "Math",
         "model_type": "cuda",
         "device": "H100",
         "kernel_count": 1,
-        "peak_total_perf": 22153500198821.61,
-        "median_total_ai": 0.0527378623,
-        "median_xtime": 1382506.6666666667
-      },
-      {
-        "source": "loopback-cuda",
-        "benchmark": "loopback",
-        "category": "algorithms",
-        "model_type": "cuda",
-        "device": "H100",
-        "kernel_count": 1,
-        "peak_total_perf": 21449439760723.555,
-        "median_total_ai": 757.5299412653,
-        "median_xtime": 42605994.666666664
-      },
-      {
-        "source": "bilateral-cuda",
-        "benchmark": "bilateral",
-        "category": "algorithms",
-        "model_type": "cuda",
-        "device": "H100",
-        "kernel_count": 1,
-        "peak_total_perf": 21125184758243.23,
-        "median_total_ai": 3.0533731029,
-        "median_xtime": 1798688.0
-      },
-      {
-        "source": "lombscargle-omp",
-        "benchmark": "lombscargle",
-        "category": "algorithms",
-        "model_type": "omp",
-        "device": "H100",
-        "kernel_count": 1,
-        "peak_total_perf": 20876303352228.56,
-        "median_total_ai": 2.4347368919,
-        "median_xtime": 221056.0
-      },
-      {
-        "source": "epistasis-omp",
-        "benchmark": "epistasis",
-        "category": "bioinformatics",
-        "model_type": "omp",
-        "device": "H100",
-        "kernel_count": 1,
-        "peak_total_perf": 20585436491507.13,
-        "median_total_ai": 10.1393582467,
-        "median_xtime": 31474197.333333332
-      },
-      {
-        "source": "loopback-omp",
-        "benchmark": "loopback",
-        "category": "algorithms",
-        "model_type": "omp",
-        "device": "H100",
-        "kernel_count": 1,
-        "peak_total_perf": 20116265234550.285,
-        "median_total_ai": 604.5988303572,
-        "median_xtime": 39264725.333333336
-      },
-      {
-        "source": "bilateral-omp",
-        "benchmark": "bilateral",
-        "category": "algorithms",
-        "model_type": "omp",
-        "device": "H100",
-        "kernel_count": 3,
-        "peak_total_perf": 19907856050728.547,
-        "median_total_ai": 3.4468371522,
-        "median_xtime": 2005077.3333333333
+        "peak_performance_tflops": 19.3287434616,
+        "median_arithmetic_intensity": 33.2939141587,
+        "median_xtime_ns": 1382506.6666666667
       },
       {
         "source": "atan2-cuda",
         "benchmark": "atan2",
-        "category": "algorithms",
+        "category": "Math",
         "model_type": "cuda",
         "device": "H100",
         "kernel_count": 3,
-        "peak_total_perf": 19658375416021.008,
-        "median_total_ai": 0.0004513936,
-        "median_xtime": 54677.3333333333
+        "peak_performance_tflops": 18.7642978817,
+        "median_arithmetic_intensity": 6.9861255834,
+        "median_xtime_ns": 54677.3333333333
+      },
+      {
+        "source": "epistasis-cuda",
+        "benchmark": "epistasis",
+        "category": "Bioinformatics",
+        "model_type": "cuda",
+        "device": "H100",
+        "kernel_count": 1,
+        "peak_performance_tflops": 18.3882861892,
+        "median_arithmetic_intensity": 224.7242789637,
+        "median_xtime_ns": 23789461.333333332
+      },
+      {
+        "source": "bilateral-cuda",
+        "benchmark": "bilateral",
+        "category": "Computer vision and image processing",
+        "model_type": "cuda",
+        "device": "H100",
+        "kernel_count": 1,
+        "peak_performance_tflops": 17.8343692908,
+        "median_arithmetic_intensity": 1330.2713325145,
+        "median_xtime_ns": 1798688.0
+      },
+      {
+        "source": "lombscargle-omp",
+        "benchmark": "lombscargle",
+        "category": "Signal processing",
+        "model_type": "omp",
+        "device": "H100",
+        "kernel_count": 1,
+        "peak_performance_tflops": 17.6973082778,
+        "median_arithmetic_intensity": 9337.0421779532,
+        "median_xtime_ns": 221056.0
       },
       {
         "source": "keogh-cuda",
         "benchmark": "keogh",
-        "category": "algorithms",
+        "category": "Search",
         "model_type": "cuda",
         "device": "H100",
         "kernel_count": 1,
-        "peak_total_perf": 19508249879515.85,
-        "median_total_ai": 1.9133300571,
-        "median_xtime": 5549376.0
+        "peak_performance_tflops": 17.5440889724,
+        "median_arithmetic_intensity": 310.068928565,
+        "median_xtime_ns": 5549376.0
       },
       {
-        "source": "gemv-cuda",
-        "benchmark": "gemv",
-        "category": "algorithms",
-        "model_type": "cuda",
-        "device": "H100",
-        "kernel_count": 4,
-        "peak_total_perf": 19503597994847.55,
-        "median_total_ai": 0.009489837,
-        "median_xtime": 808021.3333333333
-      },
-      {
-        "source": "minkowski-omp",
-        "benchmark": "minkowski",
-        "category": "algorithms",
+        "source": "lavaMD-omp",
+        "benchmark": "lavaMD",
+        "category": "Simulation",
         "model_type": "omp",
         "device": "H100",
         "kernel_count": 1,
-        "peak_total_perf": 19000578534258.23,
-        "median_total_ai": 34.1014828526,
-        "median_xtime": 4357845.333333333
+        "peak_performance_tflops": 17.2555686471,
+        "median_arithmetic_intensity": 1848.1113404607,
+        "median_xtime_ns": 1863797.3333333333
+      },
+      {
+        "source": "quant3MatMul-cuda",
+        "benchmark": "quant3MatMul",
+        "category": "Math",
+        "model_type": "cuda",
+        "device": "H100",
+        "kernel_count": 2,
+        "peak_performance_tflops": 17.1383449675,
+        "median_arithmetic_intensity": 10.8016981059,
+        "median_xtime_ns": 164240.0
+      },
+      {
+        "source": "lavaMD-cuda",
+        "benchmark": "lavaMD",
+        "category": "Simulation",
+        "model_type": "cuda",
+        "device": "H100",
+        "kernel_count": 1,
+        "peak_performance_tflops": 17.1344489614,
+        "median_arithmetic_intensity": 1858.5633694254,
+        "median_xtime_ns": 1876970.6666666667
+      },
+      {
+        "source": "binomial-omp",
+        "benchmark": "binomial",
+        "category": "Finance",
+        "model_type": "omp",
+        "device": "H100",
+        "kernel_count": 1,
+        "peak_performance_tflops": 16.924151465,
+        "median_arithmetic_intensity": 163900.6220974973,
+        "median_xtime_ns": 385930.6666666667
       },
       {
         "source": "marchingCubes-cuda",
@@ -600,664 +611,441 @@
         "model_type": "cuda",
         "device": "H100",
         "kernel_count": 5,
-        "peak_total_perf": 18983333850842.125,
-        "median_total_ai": 7.0762493837,
-        "median_xtime": 174613.3333333333
+        "peak_performance_tflops": 16.8078183302,
+        "median_arithmetic_intensity": 296.8699328632,
+        "median_xtime_ns": 174613.3333333333
       },
       {
-        "source": "lavaMD-omp",
-        "benchmark": "lavaMD",
-        "category": "algorithms",
+        "source": "minkowski-omp",
+        "benchmark": "minkowski",
+        "category": "Math",
         "model_type": "omp",
         "device": "H100",
         "kernel_count": 1,
-        "peak_total_perf": 18881387045560.074,
-        "median_total_ai": 3.7690455518,
-        "median_xtime": 1863797.3333333333
-      },
-      {
-        "source": "lavaMD-cuda",
-        "benchmark": "lavaMD",
-        "category": "algorithms",
-        "model_type": "cuda",
-        "device": "H100",
-        "kernel_count": 1,
-        "peak_total_perf": 18839354861187.66,
-        "median_total_ai": 3.8352453715,
-        "median_xtime": 1876970.6666666667
-      },
-      {
-        "source": "binomial-omp",
-        "benchmark": "binomial",
-        "category": "algorithms",
-        "model_type": "omp",
-        "device": "H100",
-        "kernel_count": 1,
-        "peak_total_perf": 18372673797486.79,
-        "median_total_ai": 68.6679182747,
-        "median_xtime": 385930.6666666667
+        "peak_performance_tflops": 15.7868507164,
+        "median_arithmetic_intensity": 6501.7523190711,
+        "median_xtime_ns": 4357845.333333333
       },
       {
         "source": "michalewicz-omp",
         "benchmark": "michalewicz",
-        "category": "algorithms",
+        "category": "Math",
         "model_type": "omp",
         "device": "H100",
         "kernel_count": 1,
-        "peak_total_perf": 17709874440556.586,
-        "median_total_ai": 0.2570668133,
-        "median_xtime": 3413034.6666666665
+        "peak_performance_tflops": 14.9510169909,
+        "median_arithmetic_intensity": 63.5858628518,
+        "median_xtime_ns": 3413034.6666666665
+      },
+      {
+        "source": "bilateral-omp",
+        "benchmark": "bilateral",
+        "category": "Computer vision and image processing",
+        "model_type": "omp",
+        "device": "H100",
+        "kernel_count": 3,
+        "peak_performance_tflops": 14.9050838287,
+        "median_arithmetic_intensity": 1276.4468028209,
+        "median_xtime_ns": 2005077.3333333333
+      },
+      {
+        "source": "clenergy-cuda",
+        "benchmark": "clenergy",
+        "category": "Simulation",
+        "model_type": "cuda",
+        "device": "H100",
+        "kernel_count": 1,
+        "peak_performance_tflops": 14.6786715512,
+        "median_arithmetic_intensity": 6310.7206510051,
+        "median_xtime_ns": 1044842.6666666666
+      },
+      {
+        "source": "surfel-omp",
+        "benchmark": "surfel",
+        "category": "Computer vision and image processing",
+        "model_type": "omp",
+        "device": "H100",
+        "kernel_count": 1,
+        "peak_performance_tflops": 14.5703735742,
+        "median_arithmetic_intensity": 215047.6440621403,
+        "median_xtime_ns": 20240704.0
+      },
+      {
+        "source": "pnpoly-cuda",
+        "benchmark": "pnpoly",
+        "category": "Math",
+        "model_type": "cuda",
+        "device": "H100",
+        "kernel_count": 2,
+        "peak_performance_tflops": 14.5399624224,
+        "median_arithmetic_intensity": 591.1250041689,
+        "median_xtime_ns": 9859434.666666668
+      },
+      {
+        "source": "atan2-omp",
+        "benchmark": "atan2",
+        "category": "Math",
+        "model_type": "omp",
+        "device": "H100",
+        "kernel_count": 3,
+        "peak_performance_tflops": 14.3683405114,
+        "median_arithmetic_intensity": 6.9931782282,
+        "median_xtime_ns": 72245.3333333333
       }
     ],
     "ai_dense_sources": [
       {
         "source": "maxFlops-omp",
         "benchmark": "maxFlops",
-        "category": "algorithms",
+        "category": "Language and kernel features",
         "model_type": "omp",
         "device": "A100",
         "kernel_count": 1,
-        "peak_total_perf": 7506835331947.508,
-        "median_total_ai": 101328.7022000773,
-        "median_xtime": 338037621.3333333
+        "peak_performance_tflops": 7.4447000378,
+        "median_arithmetic_intensity": 297274.5839516836,
+        "median_xtime_ns": 338037621.3333333
       },
       {
         "source": "maxFlops-cuda",
         "benchmark": "maxFlops",
-        "category": "algorithms",
+        "category": "Language and kernel features",
         "model_type": "cuda",
         "device": "A100",
         "kernel_count": 1,
-        "peak_total_perf": 7615840147130.5205,
-        "median_total_ai": 99371.0538164084,
-        "median_xtime": 333195978.6666667
-      },
-      {
-        "source": "maxFlops-omp",
-        "benchmark": "maxFlops",
-        "category": "algorithms",
-        "model_type": "omp",
-        "device": "A10",
-        "kernel_count": 1,
-        "peak_total_perf": 7935269384269.828,
-        "median_total_ai": 38890.0739725722,
-        "median_xtime": 319785738.6666667
-      },
-      {
-        "source": "maxFlops-cuda",
-        "benchmark": "maxFlops",
-        "category": "algorithms",
-        "model_type": "cuda",
-        "device": "A10",
-        "kernel_count": 1,
-        "peak_total_perf": 8071160376743.541,
-        "median_total_ai": 38249.5174973433,
-        "median_xtime": 314398357.3333333
-      },
-      {
-        "source": "maxFlops-omp",
-        "benchmark": "maxFlops",
-        "category": "algorithms",
-        "model_type": "omp",
-        "device": "3080",
-        "kernel_count": 2,
-        "peak_total_perf": 12324948383535.125,
-        "median_total_ai": 28484.3896242918,
-        "median_xtime": 206741642.6666667
-      },
-      {
-        "source": "maxFlops-cuda",
-        "benchmark": "maxFlops",
-        "category": "algorithms",
-        "model_type": "cuda",
-        "device": "3080",
-        "kernel_count": 2,
-        "peak_total_perf": 12425500660771.59,
-        "median_total_ai": 27886.4157983459,
-        "median_xtime": 204643797.3333333
-      },
-      {
-        "source": "maxFlops-cuda",
-        "benchmark": "maxFlops",
-        "category": "algorithms",
-        "model_type": "cuda",
-        "device": "H100",
-        "kernel_count": 3,
-        "peak_total_perf": 26243107933105.9,
-        "median_total_ai": 23963.4178882941,
-        "median_xtime": 96321162.66666667
-      },
-      {
-        "source": "maxFlops-omp",
-        "benchmark": "maxFlops",
-        "category": "algorithms",
-        "model_type": "omp",
-        "device": "H100",
-        "kernel_count": 3,
-        "peak_total_perf": 26342738564443.066,
-        "median_total_ai": 23854.433988005,
-        "median_xtime": 96349002.66666667
-      },
-      {
-        "source": "atomicIntrinsics-cuda",
-        "benchmark": "atomicIntrinsics",
-        "category": "algorithms",
-        "model_type": "cuda",
-        "device": "A100",
-        "kernel_count": 1,
-        "peak_total_perf": 7107020937.402656,
-        "median_total_ai": 18278.9834419218,
-        "median_xtime": 339779072.0
+        "peak_performance_tflops": 7.5528807695,
+        "median_arithmetic_intensity": 295770.5666434222,
+        "median_xtime_ns": 333195978.6666667
       },
       {
         "source": "grrt-omp",
         "benchmark": "grrt",
-        "category": "algorithms",
+        "category": "Simulation",
         "model_type": "omp",
-        "device": "A10",
-        "kernel_count": 1,
-        "peak_total_perf": 50618935437.05172,
-        "median_total_ai": 14572.1363549131,
-        "median_xtime": 252848768.0
+        "device": "A100",
+        "kernel_count": 2,
+        "peak_performance_tflops": 0.8201985051,
+        "median_arithmetic_intensity": 262722.5319482399,
+        "median_xtime_ns": 30087770.666666668
+      },
+      {
+        "source": "maxFlops-cuda",
+        "benchmark": "maxFlops",
+        "category": "Language and kernel features",
+        "model_type": "cuda",
+        "device": "H100",
+        "kernel_count": 3,
+        "peak_performance_tflops": 26.1341508316,
+        "median_arithmetic_intensity": 245819.8417771925,
+        "median_xtime_ns": 96321162.66666667
+      },
+      {
+        "source": "maxFlops-omp",
+        "benchmark": "maxFlops",
+        "category": "Language and kernel features",
+        "model_type": "omp",
+        "device": "H100",
+        "kernel_count": 3,
+        "peak_performance_tflops": 26.1247340092,
+        "median_arithmetic_intensity": 245583.175873696,
+        "median_xtime_ns": 96349002.66666667
       },
       {
         "source": "grrt-cuda",
         "benchmark": "grrt",
-        "category": "algorithms",
-        "model_type": "cuda",
-        "device": "A10",
-        "kernel_count": 1,
-        "peak_total_perf": 97799525495.85632,
-        "median_total_ai": 12363.5398960083,
-        "median_xtime": 124897888.0
-      },
-      {
-        "source": "grrt-omp",
-        "benchmark": "grrt",
-        "category": "algorithms",
-        "model_type": "omp",
-        "device": "A100",
-        "kernel_count": 2,
-        "peak_total_perf": 932407525898.5321,
-        "median_total_ai": 10999.8781311367,
-        "median_xtime": 30087770.666666668
-      },
-      {
-        "source": "grrt-omp",
-        "benchmark": "grrt",
-        "category": "algorithms",
-        "model_type": "omp",
-        "device": "3080",
-        "kernel_count": 1,
-        "peak_total_perf": 82523124400.09315,
-        "median_total_ai": 7156.9376283278,
-        "median_xtime": 155097045.33333334
-      },
-      {
-        "source": "grrt-cuda",
-        "benchmark": "grrt",
-        "category": "algorithms",
+        "category": "Simulation",
         "model_type": "cuda",
         "device": "A100",
         "kernel_count": 2,
-        "peak_total_perf": 1099457097468.1392,
-        "median_total_ai": 6372.6135398109,
-        "median_xtime": 23909520.0
-      },
-      {
-        "source": "atomicIntrinsics-cuda",
-        "benchmark": "atomicIntrinsics",
-        "category": "algorithms",
-        "model_type": "cuda",
-        "device": "A10",
-        "kernel_count": 1,
-        "peak_total_perf": 4584520023.424793,
-        "median_total_ai": 5803.9836257523,
-        "median_xtime": 409868032.0
+        "peak_performance_tflops": 0.998694469,
+        "median_arithmetic_intensity": 221787.3790255499,
+        "median_xtime_ns": 23909520.0
       },
       {
         "source": "surfel-omp",
         "benchmark": "surfel",
-        "category": "algorithms",
+        "category": "Computer vision and image processing",
         "model_type": "omp",
         "device": "H100",
         "kernel_count": 1,
-        "peak_total_perf": 16392609902750.947,
-        "median_total_ai": 4897.0729410911,
-        "median_xtime": 20240704.0
+        "peak_performance_tflops": 14.5703735742,
+        "median_arithmetic_intensity": 215047.6440621403,
+        "median_xtime_ns": 20240704.0
       },
       {
-        "source": "grrt-cuda",
-        "benchmark": "grrt",
-        "category": "algorithms",
+        "source": "complex-cuda",
+        "benchmark": "complex",
+        "category": "Math",
+        "model_type": "cuda",
+        "device": "H100",
+        "kernel_count": 4,
+        "peak_performance_tflops": 5.9930092442,
+        "median_arithmetic_intensity": 207831.3441003645,
+        "median_xtime_ns": 565658.6666666666
+      },
+      {
+        "source": "binomial-cuda",
+        "benchmark": "binomial",
+        "category": "Finance",
+        "model_type": "cuda",
+        "device": "A100",
+        "kernel_count": 1,
+        "peak_performance_tflops": 5.760047767,
+        "median_arithmetic_intensity": 174460.3267678571,
+        "median_xtime_ns": 1130752.0
+      },
+      {
+        "source": "binomial-cuda",
+        "benchmark": "binomial",
+        "category": "Finance",
         "model_type": "cuda",
         "device": "3080",
         "kernel_count": 1,
-        "peak_total_perf": 159094100946.88724,
-        "median_total_ai": 4333.5234492325,
-        "median_xtime": 76776650.66666667
+        "peak_performance_tflops": 6.2940245139,
+        "median_arithmetic_intensity": 172252.7459438488,
+        "median_xtime_ns": 1034570.6666666666
       },
       {
-        "source": "atomicIntrinsics-cuda",
-        "benchmark": "atomicIntrinsics",
-        "category": "algorithms",
-        "model_type": "cuda",
-        "device": "3080",
-        "kernel_count": 1,
-        "peak_total_perf": 8612764211.500174,
-        "median_total_ai": 1793.2541950503,
-        "median_xtime": 218170165.33333334
-      },
-      {
-        "source": "atomicIntrinsics-omp",
-        "benchmark": "atomicIntrinsics",
-        "category": "algorithms",
-        "model_type": "omp",
-        "device": "A10",
-        "kernel_count": 7,
-        "peak_total_perf": 1913198300007.7207,
-        "median_total_ai": 1495.475314727,
-        "median_xtime": 3725269.3333333335
-      },
-      {
-        "source": "atomicIntrinsics-omp",
-        "benchmark": "atomicIntrinsics",
-        "category": "algorithms",
+        "source": "mandelbrot-omp",
+        "benchmark": "mandelbrot",
+        "category": "Computer vision and image processing",
         "model_type": "omp",
         "device": "A100",
-        "kernel_count": 5,
-        "peak_total_perf": 3797088818689.0366,
-        "median_total_ai": 1307.4856975925,
-        "median_xtime": 2023690.6666666667
+        "kernel_count": 1,
+        "peak_performance_tflops": 6.4127649814,
+        "median_arithmetic_intensity": 169821.9113533266,
+        "median_xtime_ns": 140106.6666666667
+      },
+      {
+        "source": "binomial-omp",
+        "benchmark": "binomial",
+        "category": "Finance",
+        "model_type": "omp",
+        "device": "A100",
+        "kernel_count": 1,
+        "peak_performance_tflops": 5.7881575461,
+        "median_arithmetic_intensity": 167134.6288806632,
+        "median_xtime_ns": 1128522.6666666667
+      },
+      {
+        "source": "binomial-omp",
+        "benchmark": "binomial",
+        "category": "Finance",
+        "model_type": "omp",
+        "device": "H100",
+        "kernel_count": 1,
+        "peak_performance_tflops": 16.924151465,
+        "median_arithmetic_intensity": 163900.6220974973,
+        "median_xtime_ns": 385930.6666666667
+      },
+      {
+        "source": "mandelbrot-omp",
+        "benchmark": "mandelbrot",
+        "category": "Computer vision and image processing",
+        "model_type": "omp",
+        "device": "H100",
+        "kernel_count": 1,
+        "peak_performance_tflops": 10.1901311774,
+        "median_arithmetic_intensity": 157148.5528218284,
+        "median_xtime_ns": 88170.6666666667
+      },
+      {
+        "source": "complex-omp",
+        "benchmark": "complex",
+        "category": "Math",
+        "model_type": "omp",
+        "device": "H100",
+        "kernel_count": 1,
+        "peak_performance_tflops": 3.8684824894,
+        "median_arithmetic_intensity": 146664.1390433282,
+        "median_xtime_ns": 527338.6666666666
+      },
+      {
+        "source": "binomial-cuda",
+        "benchmark": "binomial",
+        "category": "Finance",
+        "model_type": "cuda",
+        "device": "A10",
+        "kernel_count": 1,
+        "peak_performance_tflops": 4.0954468702,
+        "median_arithmetic_intensity": 138364.2826453422,
+        "median_xtime_ns": 1589962.6666666667
+      },
+      {
+        "source": "maxFlops-omp",
+        "benchmark": "maxFlops",
+        "category": "Language and kernel features",
+        "model_type": "omp",
+        "device": "3080",
+        "kernel_count": 2,
+        "peak_performance_tflops": 12.2229330617,
+        "median_arithmetic_intensity": 136635.2194461743,
+        "median_xtime_ns": 206741642.6666667
+      },
+      {
+        "source": "maxFlops-cuda",
+        "benchmark": "maxFlops",
+        "category": "Language and kernel features",
+        "model_type": "cuda",
+        "device": "3080",
+        "kernel_count": 2,
+        "peak_performance_tflops": 12.3227801781,
+        "median_arithmetic_intensity": 135139.6898014739,
+        "median_xtime_ns": 204643797.3333333
+      },
+      {
+        "source": "binomial-omp",
+        "benchmark": "binomial",
+        "category": "Finance",
+        "model_type": "omp",
+        "device": "3080",
+        "kernel_count": 1,
+        "peak_performance_tflops": 7.5191713152,
+        "median_arithmetic_intensity": 132518.0705627706,
+        "median_xtime_ns": 868512.0
+      },
+      {
+        "source": "complex-cuda",
+        "benchmark": "complex",
+        "category": "Math",
+        "model_type": "cuda",
+        "device": "A100",
+        "kernel_count": 4,
+        "peak_performance_tflops": 3.1005346365,
+        "median_arithmetic_intensity": 132252.4911996181,
+        "median_xtime_ns": 1063648.0
       }
     ]
   },
-  "cluster_summary": {
-    "clusters": [
-      {
-        "cluster": 0,
-        "size": 876,
-        "top_op_types": [
-          {
-            "name": "integer",
-            "value": 0.49939850294969856
-          },
-          {
-            "name": "load/store",
-            "value": 0.14966703062271913
-          },
-          {
-            "name": "control",
-            "value": 0.11840010690401462
-          },
-          {
-            "name": "movement",
-            "value": 0.07977780560507713
-          }
-        ],
-        "median_total_ai": 4.569647692200624,
-        "median_ipc": 0.975,
-        "median_issue_to_exec": 1.0029042938970119,
-        "examples": [
-          {
-            "source": "quicksort-cuda",
-            "display_kernel": "_Z13lqsort_kernelIjEvPT_S1_P11work_recordIS0_E"
-          },
-          {
-            "source": "quicksort-omp",
-            "display_kernel": "_Z8GPUQSortIfEvmPT_S1__l1"
-          },
-          {
-            "source": "easyWave-omp",
-            "display_kernel": "main_l860"
-          }
-        ],
-        "centroid": {
-          "pc1": -0.17124053770496772,
-          "pc2": -0.07521790727869997
-        }
-      },
-      {
-        "cluster": 1,
-        "size": 374,
-        "top_op_types": [
-          {
-            "name": "control",
-            "value": 0.47744143111790166
-          },
-          {
-            "name": "integer",
-            "value": 0.1702464508530685
-          },
-          {
-            "name": "load/store",
-            "value": 0.1163718328240387
-          },
-          {
-            "name": "movement",
-            "value": 0.07327662125456243
-          }
-        ],
-        "median_total_ai": 1.2510605064088431,
-        "median_ipc": 0.2633333333333333,
-        "median_issue_to_exec": 1.0510254405181163,
-        "examples": [
-          {
-            "source": "ans-cuda",
-            "display_kernel": "_Z47phase3_copy_num_symbols_from_aux_to_sync_pointsjP5uint4PKj"
-          },
-          {
-            "source": "miniFE-cuda",
-            "display_kernel": "_ZN6miniFE11dyax_kernelINS_6VectorIdiiEEEEviNT_10ScalarTypeEPKS4_PS4_"
-          },
-          {
-            "source": "metropolis-cuda",
-            "display_kernel": "_Z12kernel_resetIfEvPT_iS0_"
-          }
-        ],
-        "centroid": {
-          "pc1": 0.010295827402225942,
-          "pc2": 0.37004932463074547
-        }
-      },
-      {
-        "cluster": 2,
-        "size": 517,
-        "top_op_types": [
-          {
-            "name": "integer",
-            "value": 0.6711666400768842
-          },
-          {
-            "name": "control",
-            "value": 0.08895486042240026
-          },
-          {
-            "name": "load/store",
-            "value": 0.0829132793296142
-          },
-          {
-            "name": "movement",
-            "value": 0.06029682509972695
-          }
-        ],
-        "median_total_ai": 7.399549378770904,
-        "median_ipc": 1.8500000000000003,
-        "median_issue_to_exec": 1.001497997007476,
-        "examples": [
-          {
-            "source": "vol2col-cuda",
-            "display_kernel": "_Z14vol2col_kernelIfEvlPKT_iiiiiiiiiiiiiiiiiiPS0_"
-          },
-          {
-            "source": "resize-cuda",
-            "display_kernel": "_Z15resize_bilinearItLm8EEvPT_miiPKS0_iiffb"
-          },
-          {
-            "source": "present-cuda",
-            "display_kernel": "_Z7presentiiPKhS0_PhS0_S0_S0_S0_S0_"
-          }
-        ],
-        "centroid": {
-          "pc1": -0.2959127890175983,
-          "pc2": -0.18924022842965416
-        }
-      },
-      {
-        "cluster": 3,
-        "size": 913,
-        "top_op_types": [
-          {
-            "name": "integer",
-            "value": 0.3055056041040273
-          },
-          {
-            "name": "floating point",
-            "value": 0.25582848992692125
-          },
-          {
-            "name": "load/store",
-            "value": 0.14092917501043162
-          },
-          {
-            "name": "control",
-            "value": 0.09684322350165549
-          }
-        ],
-        "median_total_ai": 4.557297229322417,
-        "median_ipc": 0.6066666666666666,
-        "median_issue_to_exec": 1.0012787723785166,
-        "examples": [
-          {
-            "source": "hybridsort-omp",
-            "display_kernel": "_Z12runMergeSortiiP6float4S0_PiS1_Pj_l1"
-          },
-          {
-            "source": "recursiveGaussian-omp",
-            "display_kernel": "_Z13RecursiveRGBAPKjPjmmffffffff_l194"
-          },
-          {
-            "source": "zoom-cuda",
-            "display_kernel": "_Z15zoom_out_kernelPKfPfiiiiiiiii"
-          }
-        ],
-        "centroid": {
-          "pc1": 0.12331922335450307,
-          "pc2": -0.0769059159822339
-        }
-      },
-      {
-        "cluster": 4,
-        "size": 623,
-        "top_op_types": [
-          {
-            "name": "integer",
-            "value": 0.281828736855185
-          },
-          {
-            "name": "control",
-            "value": 0.26605842200392615
-          },
-          {
-            "name": "load/store",
-            "value": 0.168504030858045
-          },
-          {
-            "name": "uniform datapath",
-            "value": 0.09386116986588594
-          }
-        ],
-        "median_total_ai": 2.130391355449784,
-        "median_ipc": 0.45,
-        "median_issue_to_exec": 1.0065178199972264,
-        "examples": [
-          {
-            "source": "srad-omp",
-            "display_kernel": "main_l202"
-          },
-          {
-            "source": "scan2-omp",
-            "display_kernel": "_Z9bAdditionjjPKfPf_l128"
-          },
-          {
-            "source": "channelSum-cuda",
-            "display_kernel": "_Z14ChannelSumNCHWIiLi1ELi128EEviiiPKT_PS0_S3_"
-          }
-        ],
-        "centroid": {
-          "pc1": -0.04705096464139518,
-          "pc2": 0.16432894778826443
-        }
-      },
-      {
-        "cluster": 5,
-        "size": 1048,
-        "top_op_types": [
-          {
-            "name": "integer",
-            "value": 0.3856267211724361
-          },
-          {
-            "name": "load/store",
-            "value": 0.17810336103584745
-          },
-          {
-            "name": "control",
-            "value": 0.160861118702324
-          },
-          {
-            "name": "movement",
-            "value": 0.07664159220952406
-          }
-        ],
-        "median_total_ai": 3.1969050222844375,
-        "median_ipc": 0.4983333333333333,
-        "median_issue_to_exec": 1.0031108113607372,
-        "examples": [
-          {
-            "source": "hybridsort-omp",
-            "display_kernel": "_Z10bucketSortPfS_iPiS0_ffPj_l1"
-          },
-          {
-            "source": "quicksort-cuda",
-            "display_kernel": "_Z13lqsort_kernelIfEvPT_S1_P11work_recordIS0_E"
-          },
-          {
-            "source": "quicksort-omp",
-            "display_kernel": "_Z8GPUQSortIfEvmPT_S1__l1"
-          }
-        ],
-        "centroid": {
-          "pc1": -0.0993717155408961,
-          "pc2": 0.022539635610263963
-        }
-      },
-      {
-        "cluster": 6,
-        "size": 453,
-        "top_op_types": [
-          {
-            "name": "floating point",
-            "value": 0.20016578465650547
-          },
-          {
-            "name": "control",
-            "value": 0.18391356286325095
-          },
-          {
-            "name": "integer",
-            "value": 0.1703706382736481
-          },
-          {
-            "name": "load/store",
-            "value": 0.16081998160690478
-          }
-        ],
-        "median_total_ai": 4.573324144723377,
-        "median_ipc": 0.62,
-        "median_issue_to_exec": 1.0032960535896316,
-        "examples": [
-          {
-            "source": "mandelbrot-cuda",
-            "display_kernel": "_Z6mandelPiPK16MandelParametersii"
-          },
-          {
-            "source": "md-omp",
-            "display_kernel": "_Z2mdPK7double4PS_PKiiiddd_l23"
-          },
-          {
-            "source": "pitch-cuda",
-            "display_kernel": "_Z23parallelPitched3DAccess14cudaPitchedPtriii"
-          }
-        ],
-        "centroid": {
-          "pc1": 0.16427880322037822,
-          "pc2": 0.09046263328922548
-        }
-      },
-      {
-        "cluster": 7,
-        "size": 594,
-        "top_op_types": [
-          {
-            "name": "floating point",
-            "value": 0.5099231442411227
-          },
-          {
-            "name": "integer",
-            "value": 0.15673286458587854
-          },
-          {
-            "name": "load/store",
-            "value": 0.12130665012777149
-          },
-          {
-            "name": "control",
-            "value": 0.07278669898851697
-          }
-        ],
-        "median_total_ai": 7.052572398184555,
-        "median_ipc": 0.9683333333333334,
-        "median_issue_to_exec": 1.0004534639028102,
-        "examples": [
-          {
-            "source": "ace-cuda",
-            "display_kernel": "_Z14calculateForcePA400_A400_dS1_S1_S1_dddddd"
-          },
-          {
-            "source": "marchingCubes-cuda",
-            "display_kernel": "_Z16computeMinMaxLv2PKjPf"
-          },
-          {
-            "source": "p4-cuda",
-            "display_kernel": "_Z11postprocessPKfPfS0_S0_S0_S1_S1_Piffffiiiiiff"
-          }
-        ],
-        "centroid": {
-          "pc1": 0.4134487265659471,
-          "pc2": -0.12025809211702278
-        }
-      }
-    ],
-    "op_columns": [
-      "movement",
-      "integer",
-      "synchronization",
-      "control",
-      "floating point",
-      "miscellaneous",
-      "uniform datapath",
-      "load/store",
-      "conversion",
-      "predicate",
-      "texture"
-    ]
+  "roofline_specs": [
+    {
+      "device": "3080",
+      "label": "RTX 3080 (PCIe)",
+      "architecture": "Ampere (GA102)",
+      "compute_capability": "8.6",
+      "memory_bandwidth_gbps": 760,
+      "peak_fp16_tflops": 30.55,
+      "peak_fp32_tflops": 30.55,
+      "peak_fp64_tflops": 0.477
+    },
+    {
+      "device": "A10",
+      "label": "A10 (PCIe)",
+      "architecture": "Ampere (GA102)",
+      "compute_capability": "8.6",
+      "memory_bandwidth_gbps": 600,
+      "peak_fp16_tflops": 15.62,
+      "peak_fp32_tflops": 15.62,
+      "peak_fp64_tflops": 0.244
+    },
+    {
+      "device": "A100",
+      "label": "A100 (SXM4)",
+      "architecture": "Ampere (GA100)",
+      "compute_capability": "8.0",
+      "memory_bandwidth_gbps": 1555,
+      "peak_fp16_tflops": 77.97,
+      "peak_fp32_tflops": 19.49,
+      "peak_fp64_tflops": 9.75
+    },
+    {
+      "device": "H100",
+      "label": "H100 (SXM5)",
+      "architecture": "Hopper (GH100)",
+      "compute_capability": "9.0",
+      "memory_bandwidth_gbps": 3360,
+      "peak_fp16_tflops": 133.82,
+      "peak_fp32_tflops": 66.91,
+      "peak_fp64_tflops": 33.45
+    }
+  ],
+  "paper": {
+    "title": "Can Large Language Models Predict Parallel Code Performance?",
+    "venue": "HPDC '25",
+    "doi_url": "https://dl.acm.org/doi/10.1145/3731545.3743645",
+    "pdf_url": "https://arxiv.org/pdf/2505.03988",
+    "pdf_label": "arXiv PDF",
+    "bibtex": "@inproceedings{boletCanLargeLanguage2025a,\n  title = {Can {{Large Language Models Predict Parallel Code Performance}}?},\n  booktitle = {Proceedings of the 34th {{International Symposium}} on {{High-Performance Parallel}} and {{Distributed Computing}}},\n  author = {Bolet, Gregory and Georgakoudis, Giorgis and Menon, Harshitha and Parasyris, Konstantinos and Hasabnis, Niranjan and Estes, Hayden and Cameron, Kirk and Oren, Gal},\n  date = {2025-09-09},\n  series = {{{HPDC}} '25},\n  pages = {1--6},\n  publisher = {Association for Computing Machinery},\n  location = {New York, NY, USA},\n  doi = {10.1145/3731545.3743645},\n  url = {https://dl.acm.org/doi/10.1145/3731545.3743645},\n  urldate = {2026-02-21},\n  isbn = {979-8-4007-1869-4},\n  keywords = {llms4PerfPrediction}\n}"
   },
+  "team": [
+    {
+      "name": "Gregory Bolet",
+      "affiliation": "Virginia Tech",
+      "profile_url": "https://people.cs.vt.edu/gbolet/",
+      "image_path": "./assets/team/gregory-bolet.jpg"
+    },
+    {
+      "name": "Giorgis Georgakoudis",
+      "affiliation": "Lawrence Livermore National Laboratory",
+      "profile_url": "https://people.llnl.gov/georgakoudis1",
+      "image_path": "./assets/team/giorgis-georgakoudis.png"
+    },
+    {
+      "name": "Harshitha Menon",
+      "affiliation": "Lawrence Livermore National Laboratory",
+      "profile_url": "https://www.harshithamenon.com/",
+      "image_path": "./assets/team/harshitha-menon.jpg"
+    },
+    {
+      "name": "Konstantinos Parasyris",
+      "affiliation": "Lawrence Livermore National Laboratory",
+      "profile_url": "https://www.ashes-hpc.org/2025/program.html",
+      "image_path": "./assets/team/konstantinos-parasyris.png"
+    },
+    {
+      "name": "Niranjan Hasabnis",
+      "affiliation": "Code Metal",
+      "profile_url": "https://www.codemetal.ai/about",
+      "image_path": "./assets/team/niranjan-hasabnis.jpg"
+    },
+    {
+      "name": "Hayden Estes",
+      "affiliation": "Virginia Tech",
+      "profile_url": "https://courses.cs.vt.edu/cs3214/spring2024/staff",
+      "image_path": "./assets/team/hayden-estes.svg"
+    },
+    {
+      "name": "Kirk Cameron",
+      "affiliation": "Virginia Tech",
+      "profile_url": "https://website.cs.vt.edu/people/faculty/kirk-cameron.html",
+      "image_path": "./assets/team/kirk-cameron.jpg"
+    },
+    {
+      "name": "Gal Oren",
+      "affiliation": "Stanford University",
+      "profile_url": "https://profiles.stanford.edu/galoren",
+      "image_path": "./assets/team/gal-oren.jpg"
+    }
+  ],
   "downloads": [
     {
       "label": "Compact source summary CSV",
-      "path": "docs/data/source-performance.csv",
-      "size_bytes": 249957
+      "path": "data/source-performance.csv",
+      "href": "./data/source-performance.csv",
+      "size_bytes": 225399
     },
     {
       "label": "Compact kernel summary CSV",
-      "path": "docs/data/kernel-performance.csv",
-      "size_bytes": 787713
+      "path": "data/kernel-performance.csv",
+      "href": "./data/kernel-performance.csv",
+      "size_bytes": 1636414
     },
     {
-      "label": "Full performance CSV",
-      "path": "cuda-profiling/collected-data/all-NCU-GPU-Data.csv",
-      "size_bytes": 241514699
+      "label": "Full performance CSV.gz",
+      "path": "downloads/all-NCU-GPU-Data.csv.gz",
+      "href": "./downloads/all-NCU-GPU-Data.csv.gz",
+      "size_bytes": 42063097
     },
     {
-      "label": "Feature-enriched CSV",
-      "path": "cuda-profiling/collected-data/all-NCU-GPU-Data-with-IMIX.csv",
-      "size_bytes": 11240369
+      "label": "IMIX-enriched CSV.gz",
+      "path": "downloads/all-NCU-GPU-Data-with-IMIX.csv.gz",
+      "href": "./downloads/all-NCU-GPU-Data-with-IMIX.csv.gz",
+      "size_bytes": 1524538
     },
     {
-      "label": "IMIX CSV",
-      "path": "cuda-profiling/collected-data/all-IMIX-Data.csv",
-      "size_bytes": 2672755
+      "label": "Raw IMIX CSV.gz",
+      "path": "downloads/all-IMIX-Data.csv.gz",
+      "href": "./downloads/all-IMIX-Data.csv.gz",
+      "size_bytes": 260115
     }
   ]
 }

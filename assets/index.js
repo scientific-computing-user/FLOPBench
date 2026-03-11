@@ -1,11 +1,9 @@
 (function () {
   const {
     COLORS,
-    CLUSTER_COLORS,
     basePlotlyLayout,
     emptyState,
     formatNumber,
-    githubDataUrl,
     inlineMetric,
     metricTile,
   } = window.GFBUtils;
@@ -18,7 +16,6 @@
 
   const meta = data.meta;
   const kernelRows = data.kernelRows;
-  const featureRows = data.featureRows;
   const sourceRows = data.sourceRows;
   const hasPlotly = Boolean(window.Plotly);
 
@@ -28,8 +25,10 @@
   const downloadsGridNode = document.getElementById("downloadsGrid");
   const peakPerfListNode = document.getElementById("peakPerfList");
   const aiDenseListNode = document.getElementById("aiDenseList");
-  const clusterGridNode = document.getElementById("clusterGrid");
   const readingGuideMetricsNode = document.getElementById("readingGuideMetrics");
+  const citationMetaNode = document.getElementById("citationMeta");
+  const citationBibtexNode = document.getElementById("citationBibtex");
+  const teamGridNode = document.getElementById("teamGrid");
   const lastUpdatedNode = document.getElementById("lastUpdated");
 
   const modelCoverageNode = document.getElementById("modelCoverageChart");
@@ -37,28 +36,62 @@
   const devicePerfNode = document.getElementById("devicePerfChart");
   const rooflineNode = document.getElementById("rooflineChart");
   const rooflineSummaryNode = document.getElementById("rooflineSummary");
-  const featureNode = document.getElementById("featureChart");
-  const featureSummaryNode = document.getElementById("featureSummary");
+  const rooflineDetailSummaryNode = document.getElementById("rooflineDetailSummary");
+  const rooflineDetailBody = document.getElementById("rooflineDetailBody");
   const explorerNode = document.getElementById("explorerChart");
   const sourceTableBody = document.getElementById("sourceTableBody");
   const sourceCountSummary = document.getElementById("sourceCountSummary");
 
   const rooflineDevice = document.getElementById("rooflineDevice");
   const rooflineModel = document.getElementById("rooflineModel");
+  const rooflineProgram = document.getElementById("rooflineProgram");
   const rooflineCategory = document.getElementById("rooflineCategory");
-  const featureDevice = document.getElementById("featureDevice");
-  const featureModel = document.getElementById("featureModel");
+  const rooflineKernel = document.getElementById("rooflineKernel");
+  const rooflinePrecision = document.getElementById("rooflinePrecision");
   const explorerDevice = document.getElementById("explorerDevice");
   const explorerModel = document.getElementById("explorerModel");
   const explorerCategory = document.getElementById("explorerCategory");
   const explorerSearch = document.getElementById("explorerSearch");
 
-  function fillSelect(node, values) {
+  function uniqueSorted(values) {
+    return [...new Set(values.filter(Boolean))].sort((left, right) => left.localeCompare(right));
+  }
+
+  function refillSelect(node, values, allLabel) {
+    const current = node.value;
+    node.innerHTML = "";
+
+    const allOption = document.createElement("option");
+    allOption.value = "all";
+    allOption.textContent = allLabel;
+    node.appendChild(allOption);
+
     values.forEach((value) => {
       const option = document.createElement("option");
       option.value = value;
       option.textContent = value;
       node.appendChild(option);
+    });
+
+    node.value = values.includes(current) ? current : "all";
+  }
+
+  function buildRooflineRange(rows) {
+    const aiValues = rows.map((row) => Number(row.arithmetic_intensity)).filter((value) => Number.isFinite(value) && value > 0);
+    const minAI = aiValues.length ? Math.min(...aiValues) : 1e-3;
+    const maxAI = aiValues.length ? Math.max(...aiValues) : 1e3;
+    return {
+      min: Math.pow(10, Math.floor(Math.log10(minAI)) - 0.2),
+      max: Math.pow(10, Math.ceil(Math.log10(maxAI)) + 0.2),
+    };
+  }
+
+  function buildLogSeries(minValue, maxValue, points) {
+    const minLog = Math.log10(minValue);
+    const maxLog = Math.log10(maxValue);
+    return Array.from({ length: points }, function (_, index) {
+      const ratio = index / (points - 1);
+      return Math.pow(10, minLog + (maxLog - minLog) * ratio);
     });
   }
 
@@ -71,22 +104,22 @@
       {
         label: "inventory",
         title: "Benchmark inventory",
-        text: `${meta.inventory.totals.benchmarks_yaml} benchmark entries define the visible footprint of gpuFLOPBench across the source space tracked in this site.`,
+        text: `${meta.inventory.totals.benchmarks_yaml} benchmark entries define the source footprint visible in gpuFLOPBench.`,
       },
       {
         label: "profiling",
         title: "Kernel performance corpus",
-        text: `${meta.inventory.totals.profiled_sources} profiled source binaries expand into ${kernelRows.length} aggregated kernel-device rows.`,
+        text: `${meta.inventory.totals.profiled_sources} profiled source binaries expand into ${kernelRows.length} exact kernel-device rows.`,
       },
       {
-        label: "feature space",
-        title: "Instruction-mix layer",
-        text: `${featureRows.length} feature-space rows expose repeatable structure in operation-type behavior.`,
+        label: "roofline",
+        title: "Measured floating-point rooflines",
+        text: `Kernel performance is recomputed from floating-point work over execution time and plotted against arithmetic intensity.`,
       },
       {
-        label: "hardware",
-        title: "Cross-device view",
-        text: `${meta.device_summary.map((device) => device.device).join(", ")} are represented directly in the benchmark atlas.`,
+        label: "exploration",
+        title: "Source and kernel drill-down",
+        text: `The site keeps category coverage, exact kernel rows, and source-level best-observed performance in one place.`,
       },
     ];
 
@@ -109,15 +142,15 @@
       card.innerHTML = `
         <span class="tag">${device.device}</span>
         <h3>${device.label}</h3>
-        <p>${device.family} generation, ${device.compute_capability} compute capability.</p>
+        <p>${device.architecture}, compute capability ${device.compute_capability}.</p>
       `;
       const metrics = document.createElement("div");
       metrics.className = "inline-metrics";
       metrics.append(
         inlineMetric("sources", device.sources, 0),
         inlineMetric("kernels", device.kernels, 0),
-        inlineMetric("median throughput", device.median_total_perf),
-        inlineMetric("median AI", device.median_total_ai, 4)
+        inlineMetric("bandwidth (GB/s)", device.memory_bandwidth_gbps, 0),
+        inlineMetric("peak fp32", device.peak_fp32_tflops, 2)
       );
       card.appendChild(metrics);
       deviceCardsNode.appendChild(card);
@@ -134,7 +167,7 @@
         <p>${item.path}</p>
         <div class="inline-metrics"></div>
         <div style="margin-top:16px;">
-          <a class="button secondary" href="${githubDataUrl(item.path)}" target="_blank" rel="noreferrer">Open artifact</a>
+          <a class="button secondary" href="${item.href}" download>Download artifact</a>
         </div>
       `;
       card.querySelector(".inline-metrics").append(inlineMetric("size", item.size_bytes, 0));
@@ -161,8 +194,8 @@
         </div>
       `;
       row.append(
-        inlineMetric("peak throughput", item.peak_total_perf),
-        inlineMetric("median AI", item.median_total_ai, 4),
+        inlineMetric("best perf", item.peak_performance_tflops, 4),
+        inlineMetric("median AI", item.median_arithmetic_intensity, 4),
         inlineMetric("kernels", item.kernel_count, 0)
       );
       list.appendChild(row);
@@ -176,38 +209,42 @@
     const uniqueCategories = new Set(meta.category_profiled.map((entry) => entry.category)).size;
     readingGuideMetricsNode.append(
       inlineMetric("GPUs", meta.device_summary.length, 0),
-      inlineMetric("source rows", meta.inventory.totals.profiled_sources, 0),
-      inlineMetric("feature rows", featureRows.length, 0),
+      inlineMetric("profiled binaries", meta.inventory.totals.profiled_sources, 0),
+      inlineMetric("kernel rows", kernelRows.length, 0),
       inlineMetric("categories", uniqueCategories, 0)
     );
   }
 
-  function renderClusterCards(clusters) {
-    clusters.forEach((cluster, index) => {
-      const detail = document.createElement("details");
-      detail.className = "cluster-detail";
-      detail.open = index === 0;
-      detail.innerHTML = `
-        <summary>
-          <div class="cluster-detail-title">
-            <span class="tag">cluster ${cluster.cluster}</span>
-            <h3>${cluster.top_op_types.map((entry) => entry.name).join(" + ")}</h3>
-            <div class="cluster-detail-summary">
-              <span>${formatNumber(cluster.size, 0)} feature rows</span>
-              <span>median IPC ${formatNumber(cluster.median_ipc, 2)}</span>
-              <span>median AI ${formatNumber(cluster.median_total_ai, 4)}</span>
-            </div>
-          </div>
-          <span class="cluster-detail-caret" aria-hidden="true">+</span>
-        </summary>
-        <div class="cluster-detail-body">
-          <p>Dominant operation blend across the cluster median profile.</p>
-          <div class="inline-metrics"></div>
+  function renderCitation() {
+    citationMetaNode.innerHTML = `
+      <div class="citation-actions">
+        <div>
+          <span class="tag">${meta.paper.venue}</span>
+          <h3>${meta.paper.title}</h3>
+          <p>Reference link and PDF for the paper that launched this project direction.</p>
+        </div>
+        <div class="hero-actions" style="margin-top:0;">
+          <a class="button secondary" href="${meta.paper.doi_url}" target="_blank" rel="noreferrer">Conference entry</a>
+          <a class="button primary" href="${meta.paper.pdf_url}" target="_blank" rel="noreferrer">${meta.paper.pdf_label}</a>
+        </div>
+      </div>
+    `;
+    citationBibtexNode.textContent = meta.paper.bibtex;
+  }
+
+  function renderTeam(team) {
+    team.forEach((member) => {
+      const card = document.createElement("article");
+      card.className = "team-card";
+      card.innerHTML = `
+        <img class="team-photo" src="${member.image_path}" alt="${member.name}">
+        <div class="team-copy">
+          <h3>${member.name}</h3>
+          <p>${member.affiliation}</p>
+          <a class="button secondary" href="${member.profile_url}" target="_blank" rel="noreferrer">Profile</a>
         </div>
       `;
-      const metrics = detail.querySelector(".inline-metrics");
-      cluster.top_op_types.forEach((entry) => metrics.append(inlineMetric(entry.name, entry.value, 3)));
-      clusterGridNode.appendChild(detail);
+      teamGridNode.appendChild(card);
     });
   }
 
@@ -228,20 +265,13 @@
           name: "declared sources",
           x: modelMatrix.map((entry) => entry.model.toUpperCase()),
           y: modelMatrix.map((entry) => entry.available),
-          marker: { color: "rgba(144, 183, 255, 0.8)" },
+          marker: { color: modelMatrix.map((entry) => COLORS[entry.model] || "#90b7ff") },
         },
         {
           type: "bar",
           name: "profiled sources",
           x: modelMatrix.map((entry) => entry.model.toUpperCase()),
           y: modelMatrix.map((entry) => entry.profiled),
-          marker: { color: "rgba(106, 224, 191, 0.9)" },
-        },
-        {
-          type: "bar",
-          name: "feature-space sources",
-          x: modelMatrix.map((entry) => entry.model.toUpperCase()),
-          y: modelMatrix.map((entry) => entry.feature_enriched),
           marker: { color: "rgba(255, 156, 91, 0.84)" },
         },
       ],
@@ -269,7 +299,7 @@
         barmode: "stack",
         xaxis: { title: "profiled source binaries" },
         yaxis: { automargin: true },
-        margin: { l: 110, r: 24, t: 26, b: 48 },
+        margin: { l: 180, r: 24, t: 26, b: 48 },
       })
     );
   }
@@ -289,9 +319,9 @@
         {
           type: "scatter",
           mode: "lines+markers",
-          name: "median throughput",
+          name: "median performance",
           x: devices.map((device) => device.device),
-          y: devices.map((device) => device.median_total_perf),
+          y: devices.map((device) => device.median_performance_tflops),
           marker: { color: "#ff9c5b", size: 10 },
           line: { color: "#ff9c5b", width: 3 },
           yaxis: "y2",
@@ -300,7 +330,7 @@
       basePlotlyLayout({
         yaxis: { title: "source count" },
         yaxis2: {
-          title: "median throughput",
+          title: "median performance (TFLOP/s)",
           overlaying: "y",
           side: "right",
           gridcolor: "rgba(0,0,0,0)",
@@ -310,118 +340,147 @@
     );
   }
 
+  function matchesRooflineFilters(row) {
+    const matchesDevice = rooflineDevice.value === "all" || row.device === rooflineDevice.value;
+    const matchesModel = rooflineModel.value === "all" || row.model_type === rooflineModel.value;
+    const matchesProgram = rooflineProgram.value === "all" || row.benchmark === rooflineProgram.value;
+    const matchesCategory = rooflineCategory.value === "all" || row.category === rooflineCategory.value;
+    const matchesKernel = rooflineKernel.value === "all" || row.kernel === rooflineKernel.value;
+    return matchesDevice && matchesModel && matchesProgram && matchesCategory && matchesKernel;
+  }
+
   function filteredKernelRows(rows) {
-    return rows.filter((row) => {
+    return rows.filter(matchesRooflineFilters);
+  }
+
+  function syncRooflineFilters() {
+    const baseRows = kernelRows.filter((row) => {
       const matchesDevice = rooflineDevice.value === "all" || row.device === rooflineDevice.value;
       const matchesModel = rooflineModel.value === "all" || row.model_type === rooflineModel.value;
       const matchesCategory = rooflineCategory.value === "all" || row.category === rooflineCategory.value;
-      return matchesDevice && matchesModel && matchesCategory && row.total_ai > 0 && row.total_perf > 0;
+      return matchesDevice && matchesModel && matchesCategory;
+    });
+
+    refillSelect(rooflineProgram, uniqueSorted(baseRows.map((row) => row.benchmark)), "all programs");
+
+    const programRows = baseRows.filter((row) => rooflineProgram.value === "all" || row.benchmark === rooflineProgram.value);
+    refillSelect(rooflineKernel, uniqueSorted(programRows.map((row) => row.kernel)), "all kernels");
+  }
+
+  function renderRooflineDetails(rows) {
+    const subset = filteredKernelRows(rows).sort((left, right) => Number(right.performance_tflops) - Number(left.performance_tflops));
+    rooflineDetailBody.innerHTML = "";
+
+    if (!subset.length) {
+      rooflineDetailSummaryNode.textContent = "No exact kernel rows match the current filters.";
+      return;
+    }
+
+    rooflineDetailSummaryNode.innerHTML = `
+      <strong>${subset.length}</strong> exact kernel rows match the current filters.
+      Narrow to a single program and kernel to inspect one row directly.
+    `;
+
+    subset.slice(0, 32).forEach((row) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>
+          <strong>${row.source}</strong>
+          <span>${row.category}</span>
+        </td>
+        <td>
+          <strong>${row.kernel}</strong>
+          <span>block ${row.block_size || "n/a"} | grid ${row.grid_size || "n/a"}</span>
+        </td>
+        <td><span class="tag">${row.device}</span></td>
+        <td><span class="tag">${row.model_type}</span></td>
+        <td class="mono">${formatNumber(row.performance_tflops, 4)}</td>
+        <td class="mono">${formatNumber(row.arithmetic_intensity, 4)}</td>
+        <td class="mono">${formatNumber(row.float_flops, 0)}</td>
+        <td class="mono">${formatNumber(row.bytes_total, 0)}</td>
+        <td class="mono">${formatNumber(row.xtime_ns, 2)}</td>
+      `;
+      rooflineDetailBody.appendChild(tr);
     });
   }
 
   function renderRoofline(rows) {
-    const subset = filteredKernelRows(rows);
+    const exactRows = filteredKernelRows(rows);
+    const subset = exactRows.filter((row) => Number(row.arithmetic_intensity) > 0 && Number(row.performance_tflops) > 0);
+    renderRooflineDetails(rows);
+
     if (!subset.length) {
-      emptyState(rooflineNode, "No kernel rows match the current filters.");
+      emptyState(rooflineNode, "No floating-point kernel rows match the current filters.");
       rooflineSummaryNode.textContent = "";
       return;
     }
 
+    const selectedPrecision = rooflinePrecision.value;
+    const range = buildRooflineRange(subset);
+    const roofSpecs = meta.roofline_specs.filter((spec) => rooflineDevice.value === "all" || spec.device === rooflineDevice.value);
+    const xSeries = buildLogSeries(range.min, range.max, 60);
+
+    const roofTraces = roofSpecs.map((spec) => ({
+      type: "scatter",
+      mode: "lines",
+      name: `${spec.device} ${selectedPrecision.toUpperCase()} roof`,
+      x: xSeries,
+      y: xSeries.map((ai) => Math.min(ai * spec.memory_bandwidth_gbps / 1000.0, spec[`peak_${selectedPrecision}_tflops`])),
+      hovertemplate:
+        `<b>${spec.label}</b><br>` +
+        `precision=${selectedPrecision.toUpperCase()}<br>` +
+        `bandwidth=${formatNumber(spec.memory_bandwidth_gbps, 0)} GB/s<extra></extra>`,
+      line: {
+        color: COLORS[spec.device] || "#90b7ff",
+        width: 2,
+        dash: "dash",
+      },
+      opacity: 0.8,
+    }));
+
+    const pointTraces = uniqueSorted(subset.map((row) => row.device)).map((device) => {
+      const deviceRows = subset.filter((row) => row.device === device);
+      return {
+        type: "scattergl",
+        mode: "markers",
+        name: device,
+        x: deviceRows.map((row) => row.arithmetic_intensity),
+        y: deviceRows.map((row) => row.performance_tflops),
+        text: deviceRows.map((row) => `${row.source}<br>${row.kernel}`),
+        customdata: deviceRows.map((row) => [row.category, row.model_type, row.dominant_precision, row.xtime_ns]),
+        hovertemplate:
+          "<b>%{text}</b><br>" +
+          "category=%{customdata[0]}<br>" +
+          "model=%{customdata[1]}<br>" +
+          "dominant precision=%{customdata[2]}<br>" +
+          "AI=%{x:.4f}<br>" +
+          "performance=%{y:.4f} TFLOP/s<br>" +
+          "time=%{customdata[3]:.2f} ns<extra></extra>",
+        marker: {
+          size: 8,
+          opacity: 0.72,
+          color: COLORS[device] || "#90b7ff",
+        },
+      };
+    });
+
     renderPlot(
       rooflineNode,
-      [...new Set(subset.map((row) => row.device))].map((device) => {
-        const deviceRows = subset.filter((row) => row.device === device);
-        return {
-          type: "scattergl",
-          mode: "markers",
-          name: device,
-          x: deviceRows.map((row) => row.total_ai),
-          y: deviceRows.map((row) => row.total_perf),
-          text: deviceRows.map((row) => `${row.source}<br>${row.kernel}`),
-          customdata: deviceRows.map((row) => [row.category, row.model_type, row.device]),
-          hovertemplate:
-            "<b>%{text}</b><br>" +
-            "category=%{customdata[0]}<br>" +
-            "model=%{customdata[1]}<br>" +
-            "device=%{customdata[2]}<br>" +
-            "AI=%{x:.4f}<br>" +
-            "throughput=%{y:.3e}<extra></extra>",
-          marker: {
-            size: 8,
-            opacity: 0.72,
-            color: COLORS[device] || "#90b7ff",
-          },
-        };
-      }),
+      roofTraces.concat(pointTraces),
       basePlotlyLayout({
-        xaxis: { title: "total arithmetic intensity", type: "log" },
-        yaxis: { title: "total throughput", type: "log" },
-        margin: { l: 58, r: 26, t: 30, b: 58 },
+        xaxis: { title: "arithmetic intensity (FLOPs / byte)", type: "log" },
+        yaxis: { title: "performance (TFLOP/s)", type: "log" },
+        margin: { l: 64, r: 28, t: 30, b: 58 },
       })
     );
 
-    const perfValues = subset.map((row) => row.total_perf).sort((left, right) => left - right);
-    const aiValues = subset.map((row) => row.total_ai).sort((left, right) => left - right);
+    const perfValues = subset.map((row) => Number(row.performance_tflops)).sort((left, right) => left - right);
+    const aiValues = subset.map((row) => Number(row.arithmetic_intensity)).sort((left, right) => left - right);
     rooflineSummaryNode.innerHTML = `
-      <strong>${subset.length}</strong> kernel-device rows in view.
+      <strong>${subset.length}</strong> floating-point kernel rows in view.
       Median AI <strong>${formatNumber(aiValues[Math.floor(aiValues.length / 2)], 4)}</strong>,
-      median throughput <strong>${formatNumber(perfValues[Math.floor(perfValues.length / 2)])}</strong>.
-    `;
-  }
-
-  function filteredFeatureRows(rows) {
-    return rows.filter((row) => {
-      const matchesDevice = featureDevice.value === "all" || row.device === featureDevice.value;
-      const matchesModel = featureModel.value === "all" || row.model_type === featureModel.value;
-      return matchesDevice && matchesModel;
-    });
-  }
-
-  function renderFeature(rows) {
-    const subset = filteredFeatureRows(rows);
-    if (!subset.length) {
-      emptyState(featureNode, "No feature rows match the current filters.");
-      featureSummaryNode.textContent = "";
-      return;
-    }
-
-    renderPlot(
-      featureNode,
-      [...new Set(subset.map((row) => row.cluster))]
-        .sort((left, right) => left - right)
-        .map((cluster) => {
-          const clusterRows = subset.filter((row) => row.cluster === cluster);
-          return {
-            type: "scattergl",
-            mode: "markers",
-            name: `cluster ${cluster}`,
-            x: clusterRows.map((row) => row.pc1),
-            y: clusterRows.map((row) => row.pc2),
-            text: clusterRows.map((row) => `${row.source}<br>${row.kernel}`),
-            customdata: clusterRows.map((row) => [row.dominant_op_type, row.total_ai, row.ipc_active, row.device]),
-            hovertemplate:
-              "<b>%{text}</b><br>" +
-              "dominant op=%{customdata[0]}<br>" +
-              "AI=%{customdata[1]:.4f}<br>" +
-              "IPC=%{customdata[2]:.4f}<br>" +
-              "device=%{customdata[3]}<extra></extra>",
-            marker: {
-              size: 8,
-              opacity: 0.72,
-              color: CLUSTER_COLORS[cluster % CLUSTER_COLORS.length],
-            },
-          };
-        }),
-      basePlotlyLayout({
-        xaxis: { title: "feature PC1" },
-        yaxis: { title: "feature PC2" },
-        margin: { l: 56, r: 22, t: 28, b: 50 },
-      })
-    );
-
-    featureSummaryNode.innerHTML = `
-      <strong>${subset.length}</strong> feature-space rows in view.
-      ${new Set(subset.map((row) => row.dominant_op_type)).size} dominant op families remain visible after filtering.
+      median performance <strong>${formatNumber(perfValues[Math.floor(perfValues.length / 2)], 4)} TFLOP/s</strong>.
+      Dashed lines show the ${selectedPrecision.toUpperCase()} theoretical roofline at default device clocks.
     `;
   }
 
@@ -451,9 +510,9 @@
         <td><span class="tag">${row.device}</span></td>
         <td><span class="tag">${row.model_type}</span></td>
         <td class="mono">${formatNumber(row.kernel_count, 0)}</td>
-        <td class="mono">${formatNumber(row.peak_total_perf)}</td>
-        <td class="mono">${formatNumber(row.median_total_ai, 4)}</td>
-        <td class="mono">${formatNumber(row.median_xtime)}</td>
+        <td class="mono">${formatNumber(row.peak_performance_tflops, 4)}</td>
+        <td class="mono">${formatNumber(row.median_arithmetic_intensity, 4)}</td>
+        <td class="mono">${formatNumber(row.median_xtime_ns, 2)}</td>
         <td class="mono">${formatNumber(row.coverage_rank, 0)}</td>
       `;
       sourceTableBody.appendChild(tr);
@@ -463,14 +522,14 @@
   function renderSourceChart(rows) {
     renderPlot(
       explorerNode,
-      [...new Set(rows.map((row) => row.device))].map((device) => {
-        const subset = rows.filter((row) => row.device === device && row.peak_total_perf > 0 && row.median_total_ai > 0);
+      uniqueSorted(rows.map((row) => row.device)).map((device) => {
+        const subset = rows.filter((row) => row.device === device && Number(row.peak_performance_tflops) > 0 && Number(row.median_arithmetic_intensity) > 0);
         return {
           type: "scattergl",
           mode: "markers",
           name: device,
-          x: subset.map((row) => row.median_total_ai),
-          y: subset.map((row) => row.peak_total_perf),
+          x: subset.map((row) => row.median_arithmetic_intensity),
+          y: subset.map((row) => row.peak_performance_tflops),
           text: subset.map((row) => row.source),
           customdata: subset.map((row) => [row.model_type, row.kernel_count, row.category]),
           hovertemplate:
@@ -479,7 +538,7 @@
             "kernels=%{customdata[1]}<br>" +
             "category=%{customdata[2]}<br>" +
             "median AI=%{x:.4f}<br>" +
-            "peak throughput=%{y:.3e}<extra></extra>",
+            "best performance=%{y:.4f} TFLOP/s<extra></extra>",
           marker: {
             color: COLORS[device] || "#90b7ff",
             size: subset.map((row) => Math.max(8, Math.min(28, Number(row.kernel_count) || 8))),
@@ -488,17 +547,17 @@
         };
       }),
       basePlotlyLayout({
-        xaxis: { title: "median source AI", type: "log" },
-        yaxis: { title: "peak source throughput", type: "log" },
+        xaxis: { title: "median source AI (FLOPs / byte)", type: "log" },
+        yaxis: { title: "best observed source performance (TFLOP/s)", type: "log" },
       })
     );
   }
 
   function renderExplorer(rows) {
-    const subset = filteredSourceRows(rows).sort((left, right) => Number(right.peak_total_perf) - Number(left.peak_total_perf));
+    const subset = filteredSourceRows(rows).sort((left, right) => Number(right.peak_performance_tflops) - Number(left.peak_performance_tflops));
     sourceCountSummary.innerHTML = `
       <strong>${subset.length}</strong> source-device rows match the current filters.
-      The table below shows the top 120 by peak throughput.
+      The table below shows the top 120 by best observed floating-point performance.
     `;
     renderSourceTable(subset);
     renderSourceChart(subset);
@@ -509,33 +568,31 @@
     renderBenchmarkSurfaces();
     renderDeviceCards(meta.device_summary);
     renderDownloads(meta.downloads);
-    renderTopList(peakPerfListNode, "Throughput leaders", meta.top_lists.peak_perf_sources);
+    renderTopList(peakPerfListNode, "Performance leaders", meta.top_lists.performance_sources);
     renderTopList(aiDenseListNode, "AI-dense leaders", meta.top_lists.ai_dense_sources);
     renderReadingGuide();
-    renderClusterCards(meta.cluster_summary.clusters);
+    renderCitation();
+    renderTeam(meta.team);
     renderModelCoverage(meta.model_matrix);
     renderCategoryCoverage(meta.category_profiled);
     renderDevicePerf(meta.device_summary);
 
-    fillSelect(rooflineDevice, [...new Set(kernelRows.map((row) => row.device))].sort());
-    fillSelect(rooflineModel, [...new Set(kernelRows.map((row) => row.model_type))].sort());
-    fillSelect(rooflineCategory, [...new Set(kernelRows.map((row) => row.category))].sort());
-    fillSelect(featureDevice, [...new Set(featureRows.map((row) => row.device))].sort());
-    fillSelect(featureModel, [...new Set(featureRows.map((row) => row.model_type))].sort());
-    fillSelect(explorerDevice, [...new Set(sourceRows.map((row) => row.device))].sort());
-    fillSelect(explorerModel, [...new Set(sourceRows.map((row) => row.model_type))].sort());
-    fillSelect(explorerCategory, [...new Set(sourceRows.map((row) => row.category))].sort());
+    refillSelect(rooflineDevice, uniqueSorted(kernelRows.map((row) => row.device)), "all devices");
+    refillSelect(rooflineModel, uniqueSorted(kernelRows.map((row) => row.model_type)), "all models");
+    refillSelect(rooflineCategory, uniqueSorted(kernelRows.map((row) => row.category)), "all categories");
+    syncRooflineFilters();
 
-    [rooflineDevice, rooflineModel, rooflineCategory].forEach((node) => {
+    refillSelect(explorerDevice, uniqueSorted(sourceRows.map((row) => row.device)), "all devices");
+    refillSelect(explorerModel, uniqueSorted(sourceRows.map((row) => row.model_type)), "all models");
+    refillSelect(explorerCategory, uniqueSorted(sourceRows.map((row) => row.category)), "all categories");
+
+    [rooflineDevice, rooflineModel, rooflineProgram, rooflineCategory, rooflineKernel, rooflinePrecision].forEach((node) => {
       node.addEventListener("change", function () {
+        syncRooflineFilters();
         renderRoofline(kernelRows);
       });
     });
-    [featureDevice, featureModel].forEach((node) => {
-      node.addEventListener("change", function () {
-        renderFeature(featureRows);
-      });
-    });
+
     [explorerDevice, explorerModel, explorerCategory].forEach((node) => {
       node.addEventListener("change", function () {
         renderExplorer(sourceRows);
@@ -546,7 +603,6 @@
     });
 
     renderRoofline(kernelRows);
-    renderFeature(featureRows);
     renderExplorer(sourceRows);
     lastUpdatedNode.textContent = new Date(meta.audit.generated_at).toLocaleString();
   }

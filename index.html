@@ -6,7 +6,7 @@
     <title>gpuFLOPBench</title>
     <meta
       name="description"
-      content="gpuFLOPBench is a standalone benchmark site for exploring benchmark inventory, multi-GPU profiling coverage, kernel-level arithmetic intensity, throughput, and instruction-mix structure."
+      content="gpuFLOPBench is a standalone benchmark site for exploring benchmark inventory, multi-GPU profiling coverage, kernel-level rooflines, measured floating-point performance, and source-level exploration."
     >
     <link rel="stylesheet" href="./assets/styles.css">
     <script src="./assets/plotly-2.32.0.min.js" defer></script>
@@ -28,10 +28,11 @@
           <a href="#benchmark">Benchmark</a>
           <a href="#coverage">Coverage</a>
           <a href="#performance">Performance</a>
-          <a href="#features">Feature space</a>
           <a href="#explorer">Explorer</a>
+          <a href="#citation">Citation</a>
+          <a href="#team">Team</a>
           <a href="#downloads">Downloads</a>
-          <a href="https://github.com/gregbolet/gpuFLOPBench-updated" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://github.com/scientific-computing-user/gpuFLOPBench" target="_blank" rel="noreferrer">GitHub</a>
         </nav>
       </div>
     </header>
@@ -44,8 +45,8 @@
             <span class="tag">gpuFLOPBench</span>
             <h1>gpuFLOPBench</h1>
             <p>
-              A multi-GPU benchmark atlas for source binaries, kernels, throughput,
-              arithmetic intensity, and instruction-mix structure across the profiled corpus.
+              A multi-GPU benchmark atlas for source binaries, kernel rooflines,
+              floating-point performance, and exact source-level exploration across the profiled corpus.
             </p>
             <div class="hero-actions">
               <a class="button primary" href="#performance">Explore performance</a>
@@ -60,7 +61,7 @@
           <ul>
             <li><strong>Scale.</strong> Hundreds of benchmark source binaries and thousands of kernel-device observations.</li>
             <li><strong>Hardware spread.</strong> Direct comparison across RTX 3080, A10, A100, and H100 GPUs.</li>
-            <li><strong>Multiple views.</strong> Inventory, throughput, arithmetic intensity, instruction mix, and source-level exploration in one page.</li>
+            <li><strong>Measured rooflines.</strong> Floating-point arithmetic intensity and FLOP/xtime performance in one public-facing benchmark view.</li>
           </ul>
         </article>
       </section>
@@ -72,7 +73,7 @@
             <h2>One benchmark, multiple layers of visibility.</h2>
             <p>
               gpuFLOPBench is not just a single score. It exposes the benchmark from the inventory level down to
-              per-kernel behavior so that breadth and detail stay visible at the same time.
+              exact kernel rows so that category coverage, roofline behavior, and source-level detail stay visible at the same time.
             </p>
           </div>
         </div>
@@ -95,7 +96,7 @@
             <header>
               <div>
                 <h3>Programming-model coverage</h3>
-                <p>Declared benchmark sources versus profiled and feature-enriched coverage.</p>
+                <p>Declared benchmark sources versus the profiled source binaries currently represented in gpuFLOPBench.</p>
               </div>
             </header>
             <div class="chart small" id="modelCoverageChart" data-fallback="model coverage"></div>
@@ -104,7 +105,7 @@
             <header>
               <div>
                 <h3>Category distribution</h3>
-                <p>The profiled source binaries by benchmark category and programming model.</p>
+                <p>The profiled source binaries by HeCBench README category and programming model.</p>
               </div>
             </header>
             <div class="chart small" id="categoryCoverageChart" data-fallback="category coverage"></div>
@@ -117,10 +118,10 @@
         <div class="section-head">
           <div>
             <div class="eyebrow">Performance space</div>
-            <h2>Arithmetic intensity and throughput, kernel by kernel.</h2>
+            <h2>Arithmetic intensity and measured performance, kernel by kernel.</h2>
             <p>
-              The performance views below are built from the Nsight Compute profiling corpus and keep the benchmark
-              interactive at the kernel level rather than reducing it to a single leaderboard.
+              The performance views below are built from the Nsight Compute profiling corpus and use floating-point
+              work over execution time as the measured kernel performance in TFLOP/s.
             </p>
           </div>
         </div>
@@ -129,7 +130,7 @@
             <header>
               <div>
                 <h3>Per-device overview</h3>
-                <p>Source counts and median throughput by GPU target.</p>
+                <p>Source counts and median measured floating-point performance by GPU target.</p>
               </div>
             </header>
             <div class="chart small" id="devicePerfChart" data-fallback="device performance"></div>
@@ -155,62 +156,63 @@
                 </select>
               </div>
               <div class="field">
+                <label for="rooflineProgram">program</label>
+                <select id="rooflineProgram">
+                  <option value="all">all programs</option>
+                </select>
+              </div>
+              <div class="field">
                 <label for="rooflineCategory">category</label>
                 <select id="rooflineCategory">
                   <option value="all">all categories</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="rooflineKernel">kernel</label>
+                <select id="rooflineKernel">
+                  <option value="all">all kernels</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="rooflinePrecision">roofline</label>
+                <select id="rooflinePrecision">
+                  <option value="fp32">fp32</option>
+                  <option value="fp16">fp16</option>
+                  <option value="fp64">fp64</option>
                 </select>
               </div>
             </div>
             <div class="chart" id="rooflineChart" data-fallback="roofline chart"></div>
           </article>
         </div>
-      </section>
-
-      <section class="section" id="features">
-        <div class="section-head">
-          <div>
-            <div class="eyebrow">Feature space</div>
-            <h2>Instruction-mix structure across the benchmark.</h2>
-            <p>
-              The feature-space view shows how kernels cluster when normalized op-type behavior is projected into a
-              compact 2D view. It is meant to expose structure, not hide it.
-            </p>
+        <article class="panel kernel-detail-panel">
+          <div class="section-head section-head-tight">
+            <div>
+              <h3>Exact kernel rows</h3>
+              <p id="rooflineDetailSummary" class="muted">Loading exact kernel rows...</p>
+            </div>
           </div>
-        </div>
-        <div class="split-grid">
-          <article class="chart-panel">
-            <header>
-              <div>
-                <h3>Cluster projection</h3>
-                <p id="featureSummary" class="muted">Loading feature summary...</p>
-              </div>
-            </header>
-            <div class="control-row">
-              <div class="field">
-                <label for="featureDevice">device</label>
-                <select id="featureDevice">
-                  <option value="all">all devices</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="featureModel">model</label>
-                <select id="featureModel">
-                  <option value="all">all models</option>
-                </select>
-              </div>
+          <div class="table-shell">
+            <div class="table-scroll short-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>program</th>
+                    <th>kernel</th>
+                    <th>device</th>
+                    <th>model</th>
+                    <th>perf (TFLOP/s)</th>
+                    <th>AI</th>
+                    <th>FLOPs</th>
+                    <th>bytes</th>
+                    <th>time (ns)</th>
+                  </tr>
+                </thead>
+                <tbody id="rooflineDetailBody"></tbody>
+              </table>
             </div>
-            <div class="chart" id="featureChart" data-fallback="feature chart"></div>
-          </article>
-          <article class="panel cluster-panel">
-            <div class="section-head section-head-tight">
-              <div>
-                <h2 style="font-size: 28px;">Representative cluster signatures</h2>
-                <p>Open a cluster to inspect its dominant operation blend and median behavior without letting this panel take over the page.</p>
-              </div>
-            </div>
-            <div class="cluster-stack" id="clusterGrid" data-fallback="cluster cards"></div>
-          </article>
-        </div>
+          </div>
+        </article>
       </section>
 
       <section class="section" id="explorer">
@@ -219,8 +221,8 @@
             <div class="eyebrow">Source explorer</div>
             <h2>Search the benchmark without leaving the page.</h2>
             <p>
-              Filter the source-level view by device, programming model, category, or benchmark name. The plot and the
-              table move together so the outliers stay visible.
+              Filter the source-level view by device, programming model, HeCBench README category, or benchmark name.
+              The plot and the table move together so the outliers stay visible.
             </p>
           </div>
         </div>
@@ -262,9 +264,9 @@
                   <th>device</th>
                   <th>model</th>
                   <th>kernels</th>
-                  <th>peak perf</th>
+                  <th>best perf</th>
                   <th>median AI</th>
-                  <th>median time</th>
+                  <th>median time (ns)</th>
                   <th>rank</th>
                 </tr>
               </thead>
@@ -278,7 +280,7 @@
         <div class="section-head">
           <div>
             <div class="eyebrow">Notable slices</div>
-            <h2>High-throughput and AI-dense source binaries.</h2>
+            <h2>High-performance and AI-dense source binaries.</h2>
             <p>
               These lists are not meant to replace the interactive explorer. They are here to spotlight strong benchmark
               examples that are easy to reference quickly.
@@ -290,8 +292,8 @@
             <span class="tag">reading guide</span>
             <h3>How to read the benchmark</h3>
             <p>
-              Start with coverage to understand breadth, move to the kernel atlas for cross-device behavior, use the
-              feature space to understand structure, and then drill into the source explorer for concrete benchmark slices.
+              Start with coverage to understand breadth, move to the kernel atlas for measured rooflines and exact
+              kernel rows, and then drill into the source explorer for concrete benchmark slices.
             </p>
           </div>
           <div class="inline-metrics" id="readingGuideMetrics"></div>
@@ -302,14 +304,45 @@
         </div>
       </section>
 
+      <section class="section" id="citation">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Citation</div>
+            <h2>Foundational paper.</h2>
+            <p>
+              gpuFLOPBench builds on the first paper that established this project direction. The citation is included
+              here directly, along with the conference link and a public PDF.
+            </p>
+          </div>
+        </div>
+        <article class="panel citation-panel">
+          <div id="citationMeta"></div>
+          <pre class="bibtex-block"><code id="citationBibtex"></code></pre>
+        </article>
+      </section>
+
+      <section class="section" id="team">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Meet the Team</div>
+            <h2>The people behind gpuFLOPBench.</h2>
+            <p>
+              The benchmark spans performance engineering, systems research, and machine-learning-driven analysis.
+              This section keeps the contributors visible on the site itself.
+            </p>
+          </div>
+        </div>
+        <div class="team-grid" id="teamGrid" data-fallback="team cards"></div>
+      </section>
+
       <section class="section" id="downloads">
         <div class="section-head">
           <div>
             <div class="eyebrow">Downloads</div>
             <h2>Data and artifacts.</h2>
             <p>
-              The page uses compact derived files for fast interaction and links straight back to the larger benchmark
-              artifacts when you want the raw repository data.
+              The page uses compact derived files for fast interaction and also publishes compressed raw benchmark
+              artifacts directly with the site.
             </p>
           </div>
         </div>
@@ -320,7 +353,7 @@
     <footer class="footer">
       <div>
         <strong>gpuFLOPBench</strong><br>
-        Standalone benchmark site generated from the repository artifacts in <span class="mono">docs/data/</span>.
+        Standalone benchmark site generated from profiled benchmark artifacts and bundled for public access.
       </div>
       <div>
         <strong>Last generated</strong><br>

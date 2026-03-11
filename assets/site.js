@@ -29,19 +29,10 @@
     A100: "#ffd277",
     H100: "#ff9c5b",
     cuda: "#6ae0bf",
+    hip: "#8bf0a8",
     omp: "#ff9c5b",
+    sycl: "#c9a9ff",
   };
-
-  const CLUSTER_COLORS = [
-    "#6ae0bf",
-    "#90b7ff",
-    "#ff9c5b",
-    "#ffd277",
-    "#7ac7ff",
-    "#f7a9c4",
-    "#c9a9ff",
-    "#8bf0a8",
-  ];
 
   function formatNumber(value, digits) {
     if (digits === undefined) digits = 2;
@@ -96,18 +87,12 @@
     };
   }
 
-  function githubDataUrl(path) {
-    return `https://media.githubusercontent.com/media/gregbolet/gpuFLOPBench-updated/main/${path}`;
-  }
-
   window.GFBUtils = {
     COLORS,
-    CLUSTER_COLORS,
     formatNumber,
     metricTile,
     inlineMetric,
     emptyState,
     basePlotlyLayout,
-    githubDataUrl,
   };
 })();
