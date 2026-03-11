@@ -272,6 +272,9 @@
   }
 
   function renderCitation() {
+    if (!citationMetaNode || !citationBibtexNode || !meta.paper) {
+      return;
+    }
     citationMetaNode.innerHTML = `
       <div class="citation-actions">
         <div>
@@ -289,6 +292,9 @@
   }
 
   function renderTeam(team) {
+    if (!teamGridNode || !Array.isArray(team) || !team.length) {
+      return;
+    }
     team.forEach((member) => {
       const card = document.createElement("article");
       card.className = "team-card";
